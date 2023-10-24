@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>631814403749-ah0tssrtqccp621f995ecl1oeugm6j6k.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.631814403749-ah0tssrtqccp621f995ecl1oeugm6j6k</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBWZLrgtOLqSM0Pecwm-yKb4LUfy5q9Bo0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>631814403749</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>gmg.CurrencyConverter</string>
+	<key>PROJECT_ID</key>
+	<string>ocean-529bd</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ocean-529bd.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<true/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:631814403749:ios:fadf16a13a1cb8b30e3f4c</string>
+	<key>ADMOB_APP_ID</key>
+	<string>ca-app-pub-4204494162411871~6581126074</string>
+</dict>
+</plist>
