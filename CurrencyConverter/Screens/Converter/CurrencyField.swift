@@ -14,17 +14,32 @@ struct CurrencyField: View {
     @Binding var selectedCurrency: String
 
     let currencies: [Currency]
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
-            Rectangle()
-                .foregroundColor(.primary.opacity(0.1))
-                .frame(height: 1)
-            HStack {
+            Divider()
+                .background(Color.white.opacity(0.2))
+
+            HStack(spacing: OceanSpacing.md) {
                 TextField("Enter amount", text: $enteredValue)
-                    .padding()
-                    .cornerRadius(10)
+                    .font(.system(size: 20, weight: .semibold))
                     .keyboardType(.decimalPad)
+                    .foregroundColor(.primary)
+                    .padding(OceanSpacing.md)
+                    .background(
+                        RoundedRectangle(cornerRadius: OceanRadius.sm)
+                            .fill(Color.white.opacity(0.1))
+                            .blur(radius: OceanBlur.ultraLight)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: OceanRadius.sm)
+                            .strokeBorder(
+                                isFocused ? Color.oceanTeal.opacity(0.6) : Color.clear,
+                                lineWidth: 2
+                            )
+                    )
+                    .focused($isFocused)
                     .onReceive(Just(enteredValue)) { newValue in
                         let filtered = newValue.filter {
                             "0123456789.".contains($0)
@@ -36,13 +51,20 @@ struct CurrencyField: View {
                             enteredValue = ""
                         }
                     }
+
                 Picker(selectedCurrency, selection: $selectedCurrency) {
                     ForEach(currencies) { currency in
                         Text(currency.code)
                             .tag(currency.code)
                     }
                 }
+                .tint(.oceanBluePrimary)
             }
+            .padding(OceanSpacing.md)
+            .background(
+                Color.white.opacity(0.15)
+                    .blur(radius: OceanBlur.medium)
+            )
         }
     }
 }

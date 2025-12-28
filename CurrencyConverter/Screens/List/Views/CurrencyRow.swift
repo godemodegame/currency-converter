@@ -14,37 +14,55 @@ struct CurrencyRow: View {
     let type: CurrencyRowType
 
     var body: some View {
-        HStack {
+        HStack(spacing: OceanSpacing.md) {
+            // Currency icon/flag
             if case .flag(let flag) = currency.imageSource {
                 Text(flag)
-                    .font(.title)
+                    .font(.system(size: 36))
             } else if case .image(let url) = currency.imageSource {
                 CachedAsyncImage(url: url) { image in
                     image
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 36, height: 36)
                         .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
+                        )
                 } placeholder: {
                     ProgressView()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 36, height: 36)
                 }
             }
+
+            // Currency name
             Text(currency.name)
+                .font(.body)
+                .fontWeight(.medium)
+
             Spacer()
+
+            // Rate display or bookmark
             if type == .base {
-                VStack(alignment: .trailing) {
+                VStack(alignment: .trailing, spacing: OceanSpacing.xxs) {
                     Text(
                         currency.rate
                             .formatted()
                     )
+                    .font(.body)
+                    .fontWeight(.semibold)
                     Text(currency.code)
-                        .font(.caption2)
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
             } else if case .selection(let isSelected) = type {
                 Image(systemName: isSelected ? "bookmark.fill" : "bookmark")
+                    .foregroundColor(isSelected ? .oceanTeal : .secondary)
+                    .font(.system(size: 20))
             }
-        }.padding(.vertical, 5)
+        }
+        .padding(.vertical, OceanSpacing.sm)
+        .contentShape(Rectangle())
     }
 }
 
