@@ -1,0 +1,90 @@
+# Build artifacts and derived data
+build/
+Build/
+DerivedData/
+*.build/
+*.xcarchive
+
+# Xcode user data
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+
+# Dependencies and packages
+Pods/
+Carthage/
+.build/
+Dependencies/
+.accio/
+
+# Swift Package Manager artifacts
+.swiftpm/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# Binary and compiled files
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.o
+*.lo
+*.la
+*.al
+*.libs
+*.so
+*.dylib
+*.a
+*.framework
+
+# Asset catalogs (images)
+*.xcassets/
+
+# Animation files (can be large)
+*.json
+!Package.json
+!package.json
+!tsconfig.json
+!*.config.json
+
+# Media files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.mp4
+*.mov
+*.m4v
+*.pdf
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+*~
+
+# Logs
+*.log
+
+# Test coverage
+*.gcda
+*.gcno
+*.gcov
+
+# Documentation build artifacts
+docs/_build/
+*.docc/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Git
+.git/
