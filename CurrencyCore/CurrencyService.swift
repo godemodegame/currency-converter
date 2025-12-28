@@ -42,7 +42,7 @@ public actor CurrencyService: CurrencyServiceProtocol {
     public init(
         fiatNetworkManager: FiatNetworkManager = FiatNetwork(),
         fiatWorker: FiatCurrencyWorker = FiatWorker(),
-        cryptoNetworkManager: CryptoNetworkManager = DedustNetworkManager(),
+        cryptoNetworkManager: CryptoNetworkManager = CoinGeckoNetworkManager(),
         cryptoWorker: CryptoCurrencyWorker = CryptoWorker()
     ) {
         self.fiatNetworkManager = fiatNetworkManager

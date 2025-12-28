@@ -18,12 +18,12 @@ extension FiatNetworkManager {
 public final class FiatNetwork: FiatNetworkManager {
     private let baseUrl: String
 
-    public init(baseUrl: String = "https://open.er-api.com") {
+    public init(baseUrl: String = "https://api.frankfurter.app") {
         self.baseUrl = baseUrl
     }
 
     public func getExchangeRates(currencyCode: String) async throws -> ExchangeRatesResponse {
-        guard let url = URL(string: "\(baseUrl)/v6/latest/\(currencyCode)") else {
+        guard let url = URL(string: "\(baseUrl)/latest?from=\(currencyCode)") else {
             throw URLError(.badURL)
         }
 

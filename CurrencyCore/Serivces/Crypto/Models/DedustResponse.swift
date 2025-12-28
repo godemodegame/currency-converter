@@ -5,7 +5,8 @@
 //  Created by Kirill Kirilenko on 03/05/2023.
 //
 
-public struct DedustResponse: Decodable {
-    let symbol: String
-    let price: Double
+public struct CoinGeckoResponse: Decodable {
+    let usd: Double
 }
+
+public typealias DedustResponse = CoinGeckoResponse

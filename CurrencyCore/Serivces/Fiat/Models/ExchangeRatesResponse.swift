@@ -6,5 +6,8 @@
 //
 
 public struct ExchangeRatesResponse: Decodable {
+    public let amount: Double
+    public let base: String
+    public let date: String
     public let rates: [String: Double]
 }
