@@ -622,6 +622,7 @@
 				C1492DC429FD17CA00D040C6 /* Resources */,
 				C1492DF829FD1C1900D040C6 /* Embed Frameworks */,
 				C1FBD0812A02A4F700E29CC6 /* Embed Foundation Extensions */,
+				E0B1A0F4C3207D8033F91F66 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -824,6 +825,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E0B1A0F4C3207D8033F91F66 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "Fix Google Frameworks Info.plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "${PROJECT_DIR}/fix_google_frameworks.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 
 /* Begin PBXSourcesBuildPhase section */
 		C1492DC229FD17CA00D040C6 /* Sources */ = {
