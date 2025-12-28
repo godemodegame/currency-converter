@@ -10,5 +10,4 @@ enum CurrenciesListSegment: String, CaseIterable {
     case all
     case fiat
     case crypto
-    case jettons
 }

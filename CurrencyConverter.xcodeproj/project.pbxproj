@@ -76,11 +76,6 @@
 		C1FBD0432A027D8400E29CC6 /* CryptoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0422A027D8400E29CC6 /* CryptoWorker.swift */; };
 		C1FBD0472A027F1600E29CC6 /* CryptoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0462A027F1600E29CC6 /* CryptoInfo.swift */; };
 		C1FBD04A2A0289D600E29CC6 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = C1FBD0492A0289D600E29CC6 /* CachedAsyncImage */; };
-		C1FBD04C2A02906300E29CC6 /* JettonsNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD04B2A02906300E29CC6 /* JettonsNetworkManager.swift */; };
-		C1FBD04F2A0290C600E29CC6 /* RedoubtResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD04E2A0290C600E29CC6 /* RedoubtResponse.swift */; };
-		C1FBD0522A02915C00E29CC6 /* Jetton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0512A02915C00E29CC6 /* Jetton.swift */; };
-		C1FBD0542A02916500E29CC6 /* Price.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0532A02916500E29CC6 /* Price.swift */; };
-		C1FBD0562A0291B500E29CC6 /* JettonsWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0552A0291B500E29CC6 /* JettonsWorker.swift */; };
 		C1FBD0582A02A37200E29CC6 /* bitcoin.json in Resources */ = {isa = PBXBuildFile; fileRef = C1FBD0572A02A37200E29CC6 /* bitcoin.json */; };
 		C1FBD05A2A02A3A400E29CC6 /* OnboardingThird.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0592A02A3A400E29CC6 /* OnboardingThird.swift */; };
 		C1FBD0622A02A4F600E29CC6 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1FBD0612A02A4F600E29CC6 /* Intents.framework */; };
@@ -249,11 +244,6 @@
 		C1FBD03A2A0272D000E29CC6 /* CryptoInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CryptoInfo.plist; sourceTree = "<group>"; };
 		C1FBD0422A027D8400E29CC6 /* CryptoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoWorker.swift; sourceTree = "<group>"; };
 		C1FBD0462A027F1600E29CC6 /* CryptoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoInfo.swift; sourceTree = "<group>"; };
-		C1FBD04B2A02906300E29CC6 /* JettonsNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JettonsNetworkManager.swift; sourceTree = "<group>"; };
-		C1FBD04E2A0290C600E29CC6 /* RedoubtResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedoubtResponse.swift; sourceTree = "<group>"; };
-		C1FBD0512A02915C00E29CC6 /* Jetton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jetton.swift; sourceTree = "<group>"; };
-		C1FBD0532A02916500E29CC6 /* Price.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Price.swift; sourceTree = "<group>"; };
-		C1FBD0552A0291B500E29CC6 /* JettonsWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JettonsWorker.swift; sourceTree = "<group>"; };
 		C1FBD0572A02A37200E29CC6 /* bitcoin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bitcoin.json; sourceTree = "<group>"; };
 		C1FBD0592A02A3A400E29CC6 /* OnboardingThird.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingThird.swift; sourceTree = "<group>"; };
 		C1FBD05F2A02A4F600E29CC6 /* WidgetIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -637,7 +627,6 @@
 		C1FBD0412A027D6E00E29CC6 /* Serivces */ = {
 			isa = PBXGroup;
 			children = (
-				C1FBD04D2A02906900E29CC6 /* Jettons */,
 				C1FBD0402A027D6500E29CC6 /* Crypto */,
 				C1FBD03F2A027D5400E29CC6 /* Fiat */,
 			);
@@ -658,26 +647,6 @@
 			children = (
 				C1FBD0382A02719500E29CC6 /* DedustResponse.swift */,
 				C1FBD0462A027F1600E29CC6 /* CryptoInfo.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		C1FBD04D2A02906900E29CC6 /* Jettons */ = {
-			isa = PBXGroup;
-			children = (
-				C1FBD04B2A02906300E29CC6 /* JettonsNetworkManager.swift */,
-				C1FBD0552A0291B500E29CC6 /* JettonsWorker.swift */,
-				C1FBD0502A02914F00E29CC6 /* Models */,
-			);
-			path = Jettons;
-			sourceTree = "<group>";
-		};
-		C1FBD0502A02914F00E29CC6 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				C1FBD04E2A0290C600E29CC6 /* RedoubtResponse.swift */,
-				C1FBD0532A02916500E29CC6 /* Price.swift */,
-				C1FBD0512A02915C00E29CC6 /* Jetton.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1030,13 +999,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1FBD0522A02915C00E29CC6 /* Jetton.swift in Sources */,
 				C1492E0629FD203100D040C6 /* FiatCurrencyWorker.swift in Sources */,
 				C1492E0429FD1DBA00D040C6 /* Currency.swift in Sources */,
 				C1492E0F29FD53E100D040C6 /* CurrencyError.swift in Sources */,
 				C1492E0D29FD4B4E00D040C6 /* CurrencyService.swift in Sources */,
-				C1FBD0562A0291B500E29CC6 /* JettonsWorker.swift in Sources */,
-				C1FBD04F2A0290C600E29CC6 /* RedoubtResponse.swift in Sources */,
 				C1492E1129FD54F300D040C6 /* CurrencyInfo.swift in Sources */,
 				C1492DFF29FD1C5D00D040C6 /* ExchangeRatesResponse.swift in Sources */,
 				C1492E2C29FDA23C00D040C6 /* ImageSource.swift in Sources */,
@@ -1044,10 +1010,8 @@
 				C1FBD0372A026CB700E29CC6 /* CryptoNetworkManager.swift in Sources */,
 				C1FBD0472A027F1600E29CC6 /* CryptoInfo.swift in Sources */,
 				C1FBD0432A027D8400E29CC6 /* CryptoWorker.swift in Sources */,
-				C1FBD0542A02916500E29CC6 /* Price.swift in Sources */,
 				C1492E1329FD56D200D040C6 /* Plist.swift in Sources */,
 				C1492E3229FDB3FB00D040C6 /* UserDefault.swift in Sources */,
-				C1FBD04C2A02906300E29CC6 /* JettonsNetworkManager.swift in Sources */,
 				C1492E2E29FDA43500D040C6 /* CurrencyType.swift in Sources */,
 				C1492DFD29FD1C3F00D040C6 /* FiatNetworkManager.swift in Sources */,
 				C1492DE229FD1C1800D040C6 /* CurrencyCore.docc in Sources */,

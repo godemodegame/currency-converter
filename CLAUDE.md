@@ -21,7 +21,7 @@ xcodebuild -list -project CurrencyConverter.xcodeproj
 
 ## Project Structure
 
-This is an iOS currency converter app built with SwiftUI that supports fiat currencies, cryptocurrencies, and TON blockchain jettons.
+This is an iOS currency converter app built with SwiftUI that supports fiat currencies and cryptocurrencies.
 
 ### Targets
 
@@ -33,32 +33,29 @@ This is an iOS currency converter app built with SwiftUI that supports fiat curr
 
 ### Architecture
 
-**Three-Tier Currency System:**
+**Two-Tier Currency System:**
 
-The app handles three types of currencies (`CurrencyType` enum):
+The app handles two types of currencies (`CurrencyType` enum):
 - `.fiat` - Traditional currencies (USD, EUR, etc.)
 - `.crypto` - Cryptocurrencies (BTC, ETH, TON, etc.)
-- `.jetton` - TON blockchain tokens
 
 **CurrencyService (Actor):**
 
 Located in `CurrencyCore/CurrencyService.swift`, this is the central service that:
-- Fetches exchange rates from three parallel sources via worker pattern
-- Aggregates fiat, crypto, and jetton currencies into a unified list
+- Fetches exchange rates from two parallel sources via worker pattern
+- Aggregates fiat and crypto currencies into a unified list
 - Manages currency persistence using `@UserDefault` property wrapper
 - Implements migration from old UserDefaults to shared app group (`group.gmg.CurrencyConverter`)
 
-The service uses three worker/network manager pairs:
+The service uses two worker/network manager pairs:
 1. **Fiat**: `FiatNetworkManager` + `FiatWorker` - Fetches fiat exchange rates, enriches with country flags from `CurrenciesInfo.plist`
 2. **Crypto**: `CryptoNetworkManager` (Dedust API) + `CryptoWorker` - Fetches crypto prices, enriches with metadata from `CryptoInfo.plist`
-3. **Jettons**: `JettonsNetworkManager` (Redoubt API) + `JettonsWorker` - Fetches TON jetton prices (requires TON price from crypto worker)
 
 **Data Flow:**
 ```
 CurrencyService.getCurrencies()
   ├─> FiatWorker.prepareCurrencies() -> [Currency] (.fiat)
-  ├─> CryptoWorker.prepareCurrencies() -> [Currency] (.crypto)
-  └─> JettonsWorker.prepareCurrencies(tonPrice) -> [Currency] (.jetton)
+  └─> CryptoWorker.prepareCurrencies() -> [Currency] (.crypto)
        └─> Combined, sorted, and cached
 ```
 
@@ -87,7 +84,7 @@ The `@UserDefault` property wrapper (in `CurrencyCore/PropertyWrappers/UserDefau
 Key Swift Package Manager dependencies:
 - **Lottie**: Animations (used in onboarding)
 - **SwiftFlags**: Country flag emojis for fiat currencies
-- **CachedAsyncImage**: Image caching for crypto/jetton icons
+- **CachedAsyncImage**: Image caching for crypto icons
 - **Firebase**: Analytics and app measurement
 - **GoogleMobileAds**: Ad integration
 
@@ -104,4 +101,4 @@ struct Currency: Identifiable, Codable {
 }
 ```
 
-**ImageSource** - Enum supporting both flag emojis (fiat) and remote URLs (crypto/jettons)
+**ImageSource** - Enum supporting both flag emojis (fiat) and remote URLs (crypto)

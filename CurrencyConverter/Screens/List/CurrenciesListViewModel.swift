@@ -101,8 +101,6 @@ final class CurrenciesListViewModel: ObservableObject {
             currencies = currencies.filter { $0.type == .fiat }
         case .crypto:
             currencies = currencies.filter { $0.type == .crypto }
-        case .jettons:
-            currencies = currencies.filter { $0.type == .jetton }
         case .all:
             return
         }

@@ -130,19 +130,6 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
                                 image: nil
                             )
                         }
-                ),
-                INObjectSection(
-                    title: "Jettons",
-                    items: currencies
-                        .filter { $0.type == .jetton && !favoriteCurrencies.contains($0.code) }
-                        .map { currency in
-                            CurrencyName(
-                                identifier: currency.code,
-                                display: currency.name,
-                                subtitle: currency.code,
-                                image: nil
-                            )
-                        }
                 )
             ]
         )
