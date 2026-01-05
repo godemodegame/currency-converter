@@ -17,55 +17,44 @@ struct ConverterView: View {
     var purchaseService: PurchaseService
 
     var body: some View {
-        ZStack {
-            // Ocean gradient background
-            Color.clear
-                .oceanBackground()
-
-            VStack(spacing: 0) {
-                ScrollView {
-                    LazyVStack(spacing: OceanSpacing.sm) {
-                        ForEach(viewModel.currencies) { currency in
-                            GlassCard {
-                                CurrencyRow(
-                                    currency: currency,
-                                    type: .base
-                                )
-                            }
-                        }
-
-                        // Hint text in glass card
-                        GlassCard(cornerRadius: OceanRadius.lg) {
-                            VStack(spacing: OceanSpacing.xs) {
-                                Text("Enter the value in the field below")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-
-                                Image(systemName: "arrow.down")
-                                    .font(.system(size: 24, weight: .thin))
-                                    .foregroundColor(.oceanTeal)
-                                    .floatingAnimation()
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, OceanSpacing.sm)
-                        }
-                    }
-                    .padding(OceanSpacing.md)
+        VStack(spacing: 0) {
+            List() {
+                ForEach(viewModel.currencies) { currency in
+                    CurrencyRow(
+                        currency: currency,
+                        type: .base
+                    )
                 }
-
-                if !purchaseService.hasUnlockedPro {
-                    BannerView(viewWidth: UIScreen.main.bounds.width)
-                        .frame(height: GADAdSizeBanner.size.height + 10)
-                }
-
-                CurrencyField(
-                    enteredValue: $viewModel.enteredValue,
-                    selectedCurrency: $viewModel.selectedCurrency,
-                    currencies: viewModel.currencies
-                )
+                HStack {
+                    Spacer()
+                    Text("Enter the value in the field below")
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray)
+                    Spacer()
+                }.clearRow()
+                HStack {
+                    Spacer()
+                    Image(systemName: "arrow.down")
+                        .font(.system(size: 30, weight: .thin))
+                        .foregroundColor(.gray)
+                    Spacer()
+                }.clearRow()
+                
             }
-        }
-        .task {
+            .listStyle(.insetGrouped)
+            .hideScrollIndicators()
+
+            if !purchaseService.hasUnlockedPro {
+                BannerView(viewWidth: UIScreen.main.bounds.width)
+                    .frame(height: GADAdSizeBanner.size.height + 10)
+            }
+
+            CurrencyField(
+                enteredValue: $viewModel.enteredValue,
+                selectedCurrency: $viewModel.selectedCurrency,
+                currencies: viewModel.currencies
+            )
+        }.task {
             await viewModel.loadData()
         }
     }

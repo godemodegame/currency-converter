@@ -7,13 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		08EE0197741127729576B40B /* OceanRadius.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635077D2F68A09EB75A16FEC /* OceanRadius.swift */; };
-		1B47445C912A82E9966D5D3E /* OceanButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1E268D86E31350BD6ACFB58 /* OceanButton.swift */; };
-		27242D99A125903AECC708B6 /* OceanSpacing.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE1B2141E05D2A196B5F04AE /* OceanSpacing.swift */; };
-		32C4F47D471CE27C34E3039A /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83A71E7091C73918AFAC5583 /* GlassCard.swift */; };
-		3C549347C839BAD1F9DB0900 /* GlassCardModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425CB3D729B8B5D08DD2D4E9 /* GlassCardModifier.swift */; };
-		551B0D03105FCDE014B7CC39 /* OceanShadows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C06D350C63EE05AADBC77 /* OceanShadows.swift */; };
-		ACA8738C7A71C16562E41476 /* OceanBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 322F03E0992E4CDBDAC778F3 /* OceanBlur.swift */; };
 		C10C04692A0008A300CC0C32 /* dolphin.json in Resources */ = {isa = PBXBuildFile; fileRef = C10C04682A0008A300CC0C32 /* dolphin.json */; };
 		C10C046C2A0008B800CC0C32 /* fish.json in Resources */ = {isa = PBXBuildFile; fileRef = C10C046B2A0008B800CC0C32 /* fish.json */; };
 		C10C046E2A00091500CC0C32 /* whale.json in Resources */ = {isa = PBXBuildFile; fileRef = C10C046D2A00091400CC0C32 /* whale.json */; };
@@ -91,11 +84,6 @@
 		C1FBD0982A02A5A200E29CC6 /* ListWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C1FBD0862A02A5A000E29CC6 /* ListWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C1FBD09C2A02A70200E29CC6 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0642A02A4F700E29CC6 /* IntentHandler.swift */; };
 		C1FBD09D2A02A77B00E29CC6 /* ListWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0902A02A5A000E29CC6 /* ListWidget.intentdefinition */; };
-		D07E6B85A705ED39B47F5AB9 /* FloatingAnimationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604F2A380775E91027B3C3DD /* FloatingAnimationModifier.swift */; };
-		D68CC0581EAF19EE94805AB0 /* Color+Ocean.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AB266F97EC0090277D2D54 /* Color+Ocean.swift */; };
-		DCEC4A81FFD87B6AD7643EE7 /* OceanColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2260E179C6540A05ECBB3DCF /* OceanColors.swift */; };
-		F6A9FCF4B8935C7F790994AD /* GlassmorphismModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB4E387E677B50CCD2848F4 /* GlassmorphismModifier.swift */; };
-		F8874765947F379705195B06 /* OceanGradientModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 705029F93112ADCD8C46F48C /* OceanGradientModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,25 +159,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		068B5D4905B7D8870EF9093E /* GlassmorphismModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GlassmorphismModifier.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/GlassmorphismModifier.swift; sourceTree = "<group>"; };
-		0890B29E05D0B3DF2383377C /* GlassCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GlassCard.swift; path = CurrencyConverter/DesignSystem/Components/GlassCard.swift; sourceTree = "<group>"; };
-		09AB266F97EC0090277D2D54 /* Color+Ocean.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "CurrencyConverter/DesignSystem/Extensions/Color+Ocean.swift"; sourceTree = SOURCE_ROOT; };
-		18847B7CAE0FD477F5F15E16 /* OceanColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanColors.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanColors.swift; sourceTree = "<group>"; };
-		2260E179C6540A05ECBB3DCF /* OceanColors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanColors.swift; sourceTree = SOURCE_ROOT; };
-		27A647E1F491115B5C15F24F /* OceanShadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanShadows.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanShadows.swift; sourceTree = "<group>"; };
-		322F03E0992E4CDBDAC778F3 /* OceanBlur.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanBlur.swift; sourceTree = SOURCE_ROOT; };
-		3914EA6D9635203BD861132B /* OceanButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanButton.swift; path = CurrencyConverter/DesignSystem/Components/OceanButton.swift; sourceTree = "<group>"; };
-		425CB3D729B8B5D08DD2D4E9 /* GlassCardModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/GlassCardModifier.swift; sourceTree = SOURCE_ROOT; };
-		4EB4E387E677B50CCD2848F4 /* GlassmorphismModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/GlassmorphismModifier.swift; sourceTree = SOURCE_ROOT; };
-		604F2A380775E91027B3C3DD /* FloatingAnimationModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/FloatingAnimationModifier.swift; sourceTree = SOURCE_ROOT; };
-		623C06D350C63EE05AADBC77 /* OceanShadows.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanShadows.swift; sourceTree = SOURCE_ROOT; };
-		635077D2F68A09EB75A16FEC /* OceanRadius.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanRadius.swift; sourceTree = SOURCE_ROOT; };
-		705029F93112ADCD8C46F48C /* OceanGradientModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/OceanGradientModifier.swift; sourceTree = SOURCE_ROOT; };
-		708C2956F25B37460C0821AC /* OceanSpacing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanSpacing.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanSpacing.swift; sourceTree = "<group>"; };
-		7F8E93B771910E594BC6D82B /* OceanBlur.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanBlur.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanBlur.swift; sourceTree = "<group>"; };
-		83A71E7091C73918AFAC5583 /* GlassCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Components/GlassCard.swift; sourceTree = SOURCE_ROOT; };
-		A37E39022DBC9D1F349CFBAE /* FloatingAnimationModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FloatingAnimationModifier.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/FloatingAnimationModifier.swift; sourceTree = "<group>"; };
-		B9EC88E82FD8AFD8E849B1C2 /* OceanGradientModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanGradientModifier.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/OceanGradientModifier.swift; sourceTree = "<group>"; };
 		C10C04682A0008A300CC0C32 /* dolphin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = dolphin.json; sourceTree = "<group>"; };
 		C10C046B2A0008B800CC0C32 /* fish.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fish.json; sourceTree = "<group>"; };
 		C10C046D2A00091400CC0C32 /* whale.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = whale.json; sourceTree = "<group>"; };
@@ -261,11 +230,6 @@
 		C1FBD09E2A02B02800E29CC6 /* CurrencyConverter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CurrencyConverter.entitlements; sourceTree = "<group>"; };
 		C1FBD09F2A02B07200E29CC6 /* ListWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ListWidgetExtension.entitlements; sourceTree = "<group>"; };
 		C1FBD0A02A02B08100E29CC6 /* WidgetIntent.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetIntent.entitlements; sourceTree = "<group>"; };
-		D1E268D86E31350BD6ACFB58 /* OceanButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Components/OceanButton.swift; sourceTree = SOURCE_ROOT; };
-		D9F338A884E40EBE10888932 /* Color+Ocean.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Color+Ocean.swift"; path = "CurrencyConverter/DesignSystem/Extensions/Color+Ocean.swift"; sourceTree = "<group>"; };
-		DE1B2141E05D2A196B5F04AE /* OceanSpacing.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanSpacing.swift; sourceTree = SOURCE_ROOT; };
-		EFA2B33EB80D8805998BB219 /* GlassCardModifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GlassCardModifier.swift; path = CurrencyConverter/DesignSystem/ViewModifiers/GlassCardModifier.swift; sourceTree = "<group>"; };
-		FAB7E11932B4FB8B3B5E8EE4 /* OceanRadius.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OceanRadius.swift; path = CurrencyConverter/DesignSystem/Tokens/OceanRadius.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -319,91 +283,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		01C193978AC8FCE69FECB69B /* DesignSystem */ = {
-			isa = PBXGroup;
-			children = (
-				6E25830A479AB15E69C5CD18 /* Tokens */,
-				E0FDC112F6C8AA84F93FD974 /* Extensions */,
-				58223989C89F72FA60AA9C53 /* ViewModifiers */,
-				5CBF64B92A3B9FAE90BFF681 /* Components */,
-			);
-			name = DesignSystem;
-			sourceTree = "<group>";
-		};
-		553E2BDF3D1CF3144D812BCD /* ViewModifiers */ = {
-			isa = PBXGroup;
-			children = (
-				068B5D4905B7D8870EF9093E /* GlassmorphismModifier.swift */,
-				B9EC88E82FD8AFD8E849B1C2 /* OceanGradientModifier.swift */,
-				EFA2B33EB80D8805998BB219 /* GlassCardModifier.swift */,
-				A37E39022DBC9D1F349CFBAE /* FloatingAnimationModifier.swift */,
-			);
-			name = ViewModifiers;
-			sourceTree = "<group>";
-		};
-		58223989C89F72FA60AA9C53 /* ViewModifiers */ = {
-			isa = PBXGroup;
-			children = (
-				4EB4E387E677B50CCD2848F4 /* GlassmorphismModifier.swift */,
-				705029F93112ADCD8C46F48C /* OceanGradientModifier.swift */,
-				425CB3D729B8B5D08DD2D4E9 /* GlassCardModifier.swift */,
-				604F2A380775E91027B3C3DD /* FloatingAnimationModifier.swift */,
-			);
-			name = ViewModifiers;
-			sourceTree = "<group>";
-		};
-		5CBF64B92A3B9FAE90BFF681 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				D1E268D86E31350BD6ACFB58 /* OceanButton.swift */,
-				83A71E7091C73918AFAC5583 /* GlassCard.swift */,
-			);
-			name = Components;
-			sourceTree = "<group>";
-		};
-		6E25830A479AB15E69C5CD18 /* Tokens */ = {
-			isa = PBXGroup;
-			children = (
-				2260E179C6540A05ECBB3DCF /* OceanColors.swift */,
-				DE1B2141E05D2A196B5F04AE /* OceanSpacing.swift */,
-				635077D2F68A09EB75A16FEC /* OceanRadius.swift */,
-				623C06D350C63EE05AADBC77 /* OceanShadows.swift */,
-				322F03E0992E4CDBDAC778F3 /* OceanBlur.swift */,
-			);
-			name = Tokens;
-			sourceTree = "<group>";
-		};
-		82B46ABBBE47FDC66C8D72DB /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				D9F338A884E40EBE10888932 /* Color+Ocean.swift */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
-		87C7AB07A233FC1B48984FF3 /* DesignSystem */ = {
-			isa = PBXGroup;
-			children = (
-				B54A98A0257E66CE3A11F61E /* Tokens */,
-				82B46ABBBE47FDC66C8D72DB /* Extensions */,
-				553E2BDF3D1CF3144D812BCD /* ViewModifiers */,
-				FA338FAE95C411E935B8D9AA /* Components */,
-			);
-			name = DesignSystem;
-			sourceTree = "<group>";
-		};
-		B54A98A0257E66CE3A11F61E /* Tokens */ = {
-			isa = PBXGroup;
-			children = (
-				18847B7CAE0FD477F5F15E16 /* OceanColors.swift */,
-				708C2956F25B37460C0821AC /* OceanSpacing.swift */,
-				FAB7E11932B4FB8B3B5E8EE4 /* OceanRadius.swift */,
-				27A647E1F491115B5C15F24F /* OceanShadows.swift */,
-				7F8E93B771910E594BC6D82B /* OceanBlur.swift */,
-			);
-			name = Tokens;
-			sourceTree = "<group>";
-		};
 		C10C046A2A0008A500CC0C32 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
@@ -477,8 +356,6 @@
 				C1FBD03A2A0272D000E29CC6 /* CryptoInfo.plist */,
 				C144B04C2A030AD2005CEB87 /* GoogleService-Info.plist */,
 				C1E982A329FED2250042B952 /* Info.plist */,
-				87C7AB07A233FC1B48984FF3 /* DesignSystem */,
-				01C193978AC8FCE69FECB69B /* DesignSystem */,
 			);
 			path = CurrencyConverter;
 			sourceTree = "<group>";
@@ -683,23 +560,6 @@
 			path = ListWidget;
 			sourceTree = "<group>";
 		};
-		E0FDC112F6C8AA84F93FD974 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				09AB266F97EC0090277D2D54 /* Color+Ocean.swift */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
-		FA338FAE95C411E935B8D9AA /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				3914EA6D9635203BD861132B /* OceanButton.swift */,
-				0890B29E05D0B3DF2383377C /* GlassCard.swift */,
-			);
-			name = Components;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -731,7 +591,7 @@
 				C1492DC429FD17CA00D040C6 /* Resources */,
 				C1492DF829FD1C1900D040C6 /* Embed Frameworks */,
 				C1FBD0812A02A4F700E29CC6 /* Embed Foundation Extensions */,
-				E0B1A0F4C3207D8033F91F66 /* Fix Google Frameworks Info.plist */,
+				E0B1A0F4C3207D8033F91F66 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -936,12 +796,10 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		E0B1A0F4C3207D8033F91F66 /* Fix Google Frameworks Info.plist */ = {
+		E0B1A0F4C3207D8033F91F66 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			inputPaths = (
 			);
 			name = "Fix Google Frameworks Info.plist";
 			outputFileListPaths = (
@@ -953,6 +811,7 @@
 			shellScript = "${PROJECT_DIR}/fix_google_frameworks.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
+
 
 /* Begin PBXSourcesBuildPhase section */
 		C1492DC229FD17CA00D040C6 /* Sources */ = {
@@ -980,18 +839,6 @@
 				C144B04B2A0306AC005CEB87 /* AppDelegate.swift in Sources */,
 				C1FBD05A2A02A3A400E29CC6 /* OnboardingThird.swift in Sources */,
 				C1492E1929FD596200D040C6 /* ConverterViewModel.swift in Sources */,
-				DCEC4A81FFD87B6AD7643EE7 /* OceanColors.swift in Sources */,
-				27242D99A125903AECC708B6 /* OceanSpacing.swift in Sources */,
-				08EE0197741127729576B40B /* OceanRadius.swift in Sources */,
-				551B0D03105FCDE014B7CC39 /* OceanShadows.swift in Sources */,
-				ACA8738C7A71C16562E41476 /* OceanBlur.swift in Sources */,
-				D68CC0581EAF19EE94805AB0 /* Color+Ocean.swift in Sources */,
-				F6A9FCF4B8935C7F790994AD /* GlassmorphismModifier.swift in Sources */,
-				F8874765947F379705195B06 /* OceanGradientModifier.swift in Sources */,
-				3C549347C839BAD1F9DB0900 /* GlassCardModifier.swift in Sources */,
-				D07E6B85A705ED39B47F5AB9 /* FloatingAnimationModifier.swift in Sources */,
-				1B47445C912A82E9966D5D3E /* OceanButton.swift in Sources */,
-				32C4F47D471CE27C34E3039A /* GlassCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

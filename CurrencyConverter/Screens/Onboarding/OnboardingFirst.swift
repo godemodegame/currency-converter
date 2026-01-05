@@ -15,54 +15,36 @@ struct OnboardingFirst: View {
     @State var showButton = false
 
     var body: some View {
-        ZStack {
-            // Ocean gradient background
-            Color.clear
-                .oceanBackground()
-
-            VStack(spacing: OceanSpacing.xl) {
-                Spacer()
-
-                Image("icon")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                    .cornerRadius(40)
-                    .opacity(showIcon ? 1 : 0)
-                    .scaleEffect(showIcon ? 1 : 0.8)
-
-                Text("Thank you")
-                    .font(.system(size: 32, weight: .bold))
-                    .opacity(showTexts ? 1 : 0)
-
-                Text("for downloading my app")
+        VStack {
+            Spacer()
+            Image("icon")
+                .resizable()
+                .frame(width: 200, height: 200)
+                .cornerRadius(40)
+                .padding(.bottom)
+                .opacity(showIcon ? 1 : 0)
+            Text("Thank you")
+                .font(.title)
+                .opacity(showTexts ? 1 : 0)
+            Text("for downloading my app")
+                .font(.title3)
+                .opacity(showTexts ? 1 : 0)
+            Spacer()
+            NavigationLink {
+                OnboardingSecond(close: $close)
+            } label: {
+                Text("What does the app do?")
                     .font(.title3)
-                    .opacity(showTexts ? 1 : 0)
-
-                Spacer()
-
-                NavigationLink {
-                    OnboardingSecond(close: $close)
-                } label: {
-                    Text("What does the app do?")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(LinearGradient.oceanButton)
-                        .cornerRadius(OceanRadius.md)
-                        .shadow(
-                            color: Color.oceanBluePrimary.opacity(0.3),
-                            radius: OceanShadow.medium.radius,
-                            y: OceanShadow.medium.y
-                        )
-                }
-                .padding(.horizontal, OceanSpacing.xxxl)
-                .padding(.bottom, OceanSpacing.lg)
-                .opacity(showButton ? 1 : 0)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(10)
             }
-        }
-        .task {
+            .padding(.horizontal, 40)
+            .padding(.bottom)
+            .opacity(showButton ? 1 : 0)
+        }.task {
             do {
                 try await Task.sleep(nanoseconds: 500_000_000)
                 withAnimation {

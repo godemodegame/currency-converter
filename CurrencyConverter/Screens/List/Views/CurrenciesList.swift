@@ -13,58 +13,41 @@ struct CurrenciesList: View {
     var viewModel: CurrenciesListViewModel
 
     var body: some View {
-        ZStack {
-            // Ocean gradient background
-            Color.clear
-                .oceanBackground()
-
-            VStack(spacing: OceanSpacing.md) {
-                // Glass segmented picker
-                GlassCard {
-                    Picker("Picker", selection: $viewModel.selectedSegment) {
-                        ForEach(CurrenciesListSegment.allCases, id: \.self) {
-                            Text($0.rawValue.capitalized)
-                        }
+        List {
+            Section {
+                Picker("Picker", selection: $viewModel.selectedSegment) {
+                    ForEach(CurrenciesListSegment.allCases, id: \.self) {
+                        Text($0.rawValue.capitalized)
                     }
-                    .pickerStyle(.segmented)
                 }
-                .padding(.horizontal, OceanSpacing.md)
-                .padding(.top, OceanSpacing.xs)
+                .pickerStyle(.segmented)
+            }
+            .clearRow()
 
-                ScrollView {
-                    LazyVStack(spacing: OceanSpacing.xs) {
-                        ForEach(viewModel.currencies) { currency in
-                            Button { [weak viewModel] in
-                                viewModel?.pushed(currency: currency)
-                            } label: {
-                                CurrencyRow(
-                                    currency: currency,
-                                    type: .selection(
-                                        viewModel.isSaved(currency: currency)
-                                    )
-                                )
-                                .foregroundColor(.primary)
-                                .padding(.horizontal, OceanSpacing.md)
-                                .padding(.vertical, OceanSpacing.xs)
-                                .background(
-                                    RoundedRectangle(cornerRadius: OceanRadius.sm)
-                                        .fill(Color.white.opacity(0.1))
-                                )
-                            }
-                        }
-                    }
-                    .padding(.horizontal, OceanSpacing.md)
+            ForEach(viewModel.currencies) { currency in
+                Button { [weak viewModel] in
+                    viewModel?.pushed(currency: currency)
+                } label: {
+                    CurrencyRow(
+                        currency: currency,
+                        type: .selection(
+                            viewModel.isSaved(
+                                currency: currency
+                            )
+                        )
+                    ).foregroundColor(.primary)
                 }
-                .searchable(text: $viewModel.searchText)
             }
         }
         .sheet(isPresented: $viewModel.showPremium) {
             SubscriptionView()
         }
+        .hideScrollIndicators()
+        .searchable(text: $viewModel.searchText)
+        .listStyle(.insetGrouped)
         .task {
             await viewModel.loadData()
-        }
-        .navigationTitle("Currencies List")
+        }.navigationTitle("Currencies List")
     }
 }
 
