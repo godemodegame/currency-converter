@@ -15,13 +15,18 @@ final class ConverterViewModel: ObservableObject {
 
     @Published var enteredValue: String = ""
     @Published var error: Error?
-    @Published var currencies: [Currency] = []
+    @Published private(set) var currencies: [Currency] = []
     @Published var selectedCurrency: String = ""
 
     // MARK: Private properties
 
-    @UserDefault("favoriteCurrencies", defaultValue: [])
+    @UserDefault(UserDefaultsKey.favoriteCurrencies, defaultValue: [])
     private var favoriteCurrencies: [String]
+
+    /// Immutable canonical (USD-based) snapshot of the favorite currencies.
+    /// The displayed `currencies` is always derived from this; we never mutate
+    /// the source in place.
+    private var favorites: [Currency] = []
 
     private let currencyService: any CurrencyServiceProtocol
     private var bin: Set<AnyCancellable> = []
@@ -30,37 +35,25 @@ final class ConverterViewModel: ObservableObject {
 
     init(currencyService: any CurrencyServiceProtocol = CurrencyService()) {
         self.currencyService = currencyService
-        $selectedCurrency
-            .sink { [weak self] _ in
-                Task {
-                    await self?.loadData()
-                }
-            }.store(in: &bin)
-        $enteredValue
-            .sink { [weak self] _ in
-                Task {
-                    await self?.loadData()
-                }
-            }.store(in: &bin)
+        // Changing the base currency or the amount is a pure local recompute —
+        // no network refetch, so typing no longer hits the service per keystroke.
+        Publishers.CombineLatest($selectedCurrency, $enteredValue)
+            .dropFirst()
+            .sink { [weak self] _ in self?.recompute() }
+            .store(in: &bin)
     }
 
     // MARK: Public methods
 
     func loadData() async {
-        let savedCurrencies = await currencyService.getSavedCurrencies()
-        if !savedCurrencies.isEmpty, currencies.isEmpty {
-            currencies = savedCurrencies
-                .filter { favoriteCurrencies.contains($0.code) }
-                .sorted { $0.code == selectedCurrency || $0.code < $1.code }
-            selectedCurrency = currencies.first?.code ?? "USD"
-            updateCurrencies()
+        let saved = await currencyService.getSavedCurrencies()
+        if !saved.isEmpty, favorites.isEmpty {
+            apply(source: saved)
         }
         do {
-            currencies = try await currencyService
-                .getCurrencies()
-                .filter { favoriteCurrencies.contains($0.code) }
-                .sorted { $0.code == selectedCurrency || $0.code < $1.code }
-            updateCurrencies()
+            let fresh = try await currencyService.getCurrencies()
+            guard !Task.isCancelled else { return }
+            apply(source: fresh)
         } catch {
             self.error = error
         }
@@ -68,18 +61,21 @@ final class ConverterViewModel: ObservableObject {
 
     // MARK: Private methods
 
-    private func updateCurrencies() {
+    private func apply(source: [Currency]) {
+        favorites = source.filter { favoriteCurrencies.contains($0.code) }
+        if !favorites.contains(where: { $0.code == selectedCurrency }) {
+            selectedCurrency = favorites.first?.code ?? "USD"
+        }
+        recompute()
+    }
+
+    private func recompute() {
         let amount = Double(enteredValue) ?? 1
-        if let selectedValue = currencies.first(where: { $0.code == selectedCurrency}) {
-            currencies = currencies.map {
-                Currency(
-                    name: $0.name,
-                    imageSource: $0.imageSource,
-                    code: $0.code,
-                    rate: $0.rate / selectedValue.rate * amount,
-                    type: $0.type
-                )
-            }
+        let sorted = favorites.sorted { $0.code == selectedCurrency || $0.code < $1.code }
+        if let base = sorted.first(where: { $0.code == selectedCurrency }) {
+            currencies = sorted.converted(against: base, amount: amount)
+        } else {
+            currencies = sorted
         }
     }
 }
