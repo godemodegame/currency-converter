@@ -46,14 +46,6 @@
         </dict>
         <dict>
             <key>name</key>
-            <string>Toncoin</string>
-            <key>imageUrl</key>
-            <string>https://s2.coinmarketcap.com/static/img/coins/64x64/11419.png</string>
-            <key>code</key>
-            <string>TON</string>
-        </dict>
-        <dict>
-            <key>name</key>
             <string>Solana</string>
             <key>imageUrl</key>
             <string>https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png</string>

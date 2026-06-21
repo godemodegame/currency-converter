@@ -16,7 +16,6 @@ enum CoinMapping {
         "UNI": "uniswap",
         "TUSD": "true-usd",
         "TRX": "tron",
-        "TON": "the-open-network",
         "SOL": "solana",
         "MATIC": "polygon-ecosystem-token",
         "DAI": "dai",

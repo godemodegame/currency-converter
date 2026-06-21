@@ -49,7 +49,7 @@ This is an iOS currency converter app built with SwiftUI that supports fiat curr
 
 The app handles two types of currencies (`CurrencyType` enum):
 - `.fiat` - Traditional currencies (USD, EUR, etc.)
-- `.crypto` - Cryptocurrencies (BTC, ETH, TON, etc.)
+- `.crypto` - Cryptocurrencies (BTC, ETH, SOL, etc.)
 
 **CurrencyService (Actor):**
 

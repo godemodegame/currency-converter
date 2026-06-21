@@ -21,7 +21,7 @@ struct OnboardingThird: View {
                 .font(.title3)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
-            Text("You can view rates of all major cryptocurrencies, including Bitcoin, Ethereum and Toncoin")
+            Text("You can view rates of all major cryptocurrencies, including Bitcoin, Ethereum and more")
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
             Spacer()
