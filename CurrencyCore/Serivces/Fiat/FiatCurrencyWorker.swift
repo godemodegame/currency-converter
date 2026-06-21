@@ -16,7 +16,12 @@ public final class FiatWorker: FiatCurrencyWorker {
 
     public func prepareCurrencies(_ dict: ExchangeRatesResponse) throws -> [Currency] {
         let currencyPlist = try Plist<CurrencyInfo>.load(resource: "CurrenciesInfo")
-        return dict.rates.map { rate in
+        // Frankfurter omits the base currency from `rates` (it's implied as
+        // `amount`, e.g. USD = 1.0), so fold it back in — otherwise the
+        // canonical base never appears in the list.
+        var rates = dict.rates
+        rates[dict.base] = dict.amount
+        return rates.map { rate in
             let info = currencyPlist.currencies.first { $0.code == rate.key }
             return Currency(
                 name: info?.name ?? "",
