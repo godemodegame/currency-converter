@@ -1,6 +1,6 @@
 //
 //  WidgetEntry.swift
-//  CurrencyConverter
+//  ListWidget
 //
 //  Created by Kirill Kirilenko on 03/05/2023.
 //
@@ -17,12 +17,6 @@ struct WidgetEntry: TimelineEntry {
 struct CurrencyModel: Identifiable, Equatable {
     let id: UUID = UUID()
     let name: String
-    let image: WidgetImage?
     let baseName: String
     let rate: Double
-}
-
-enum WidgetImage: Equatable {
-    case flag(String)
-    case image(Data)
 }

@@ -5,8 +5,20 @@
 //  Created by Kirill Kirilenko on 01/05/2023.
 //
 
+import Combine
+import Foundation
+import StoreKit
+
+/// Errors surfaced by `PurchaseService.purchase(_:)`.
+public enum PurchaseError: Error {
+    /// The user dismissed the purchase sheet.
+    case cancelled
+    /// StoreKit could not verify the transaction's signature.
+    case unverified(Error)
+}
+
 @MainActor
-public final class PurchaseService: NSObject, ObservableObject, SKPaymentTransactionObserver {
+public final class PurchaseService: ObservableObject {
     // MARK: Private properties
     private let productsId: [String]
 
@@ -31,7 +43,6 @@ public final class PurchaseService: NSObject, ObservableObject, SKPaymentTransac
 
     public init(productsId: [String]) {
         self.productsId = productsId
-        super.init()
         updates = observeTransactionUpdates()
     }
 
@@ -61,12 +72,11 @@ public final class PurchaseService: NSObject, ObservableObject, SKPaymentTransac
             await transaction.finish()
             await updatePurchasedProducts()
         case let .success(.unverified(_, error)):
-            self.error = error
-            break
+            throw PurchaseError.unverified(error)
         case .pending:
             break
         case .userCancelled:
-            throw VerificationResult<Transaction>.VerificationError.invalidSignature
+            throw PurchaseError.cancelled
         @unknown default:
             break
         }
@@ -98,20 +108,5 @@ public final class PurchaseService: NSObject, ObservableObject, SKPaymentTransac
                 await updatePurchasedProducts()
             }
         }
-    }
-
-    // MARK: - SKPaymentTransactionObserver
-
-    nonisolated public func paymentQueue(
-        _: SKPaymentQueue,
-        updatedTransactions _: [SKPaymentTransaction]
-    ) { }
-
-    nonisolated public func paymentQueue(
-        _: SKPaymentQueue,
-        shouldAddStorePayment _: SKPayment,
-        for _: SKProduct
-    ) -> Bool {
-        true
     }
 }

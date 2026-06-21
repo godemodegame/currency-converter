@@ -14,7 +14,7 @@ struct ListWidgetEntryView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ForEach(entry.currencies) { currency in
+            ForEach(Array(entry.currencies.enumerated()), id: \.element.id) { index, currency in
                 HStack {
                     Text("1 \(currency.name) =")
                         .font(.system(size: 16).bold())
@@ -35,7 +35,7 @@ struct ListWidgetEntryView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 5)
-                if entry.currencies.firstIndex(of: currency) != 2 {
+                if index != entry.currencies.count - 1 {
                     Rectangle()
                         .frame(maxWidth: .infinity)
                         .frame(height: 1)
