@@ -27,36 +27,7 @@ struct SubscriptionView: View {
                 .padding(.bottom, 20)
             Text("1 Year = \(purchaseService.products.first?.displayPrice ?? "")")
             Spacer()
-            HStack {
-                Link(
-                    "Terms of use",
-                    destination: URL(
-                        string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-                    )!
-                )
-                .foregroundColor(.gray)
-                Link(
-                    "Privacy Policy",
-                    destination: URL(
-                        string: "https://doc-hosting.flycricket.io/ocean-currency-converter-privacy-policy/e7d5acdd-6fd5-4d6b-bf93-46ebc57a05ec/privacy"
-                    )!
-                )
-                .foregroundColor(.gray)
-                Button {
-                    Task {
-                        do {
-                            try await purchaseService.restore()
-                            dismiss()
-                        } catch {
-                            print(error)
-                        }
-                    }
-                } label: {
-                    Text("Restore")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 16))
-                }
-            }.padding(.vertical)
+            LegalLinksRow { dismiss() }
             Button {
                 Task {
                     guard let product = purchaseService.products.first else {

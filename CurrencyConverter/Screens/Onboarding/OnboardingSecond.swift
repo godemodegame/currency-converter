@@ -29,12 +29,7 @@ struct OnboardingSecond: View {
                 OnboardingThird(close: $close)
             } label: {
                 Text("Show me more")
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(10)
+                    .primaryButtonStyle()
             }
             .padding(.horizontal, 40)
             .padding(.bottom)

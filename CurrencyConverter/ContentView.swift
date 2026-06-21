@@ -47,11 +47,9 @@ struct ContentView: View {
                     Analytics.logEvent("open app", parameters: [:])
                     if isFirstOpen {
                         showOnboarding.toggle()
-                        UserDefaults(
-                            suiteName: "group.gmg.CurrencyConverter"
-                        )?.set(
-                            ["USD", "EUR", "BTC"],
-                            forKey: "favoriteCurrencies"
+                        AppGroup.userDefaults.set(
+                            CurrencyDefaults.favoriteCodes,
+                            forKey: UserDefaultsKey.favoriteCurrencies
                         )
                     }
                 }

@@ -1,5 +1,5 @@
 //
-//  OnboardingThree.swift
+//  OnboardingLast.swift
 //  CurrencyConverter
 //
 //  Created by Kirill Kirilenko on 30/04/2023.
@@ -33,36 +33,7 @@ struct OnboardingLast: View {
                 .padding([.bottom, .horizontal])
             Text("1 year - \(purchaseService.products.first?.displayPrice ?? "")")
             Spacer()
-            HStack {
-                Link(
-                    "Terms of use",
-                    destination: URL(
-                        string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
-                    )!
-                )
-                .foregroundColor(.gray)
-                Link(
-                    "Privacy Policy",
-                    destination: URL(
-                        string: "https://doc-hosting.flycricket.io/ocean-currency-converter-privacy-policy/e7d5acdd-6fd5-4d6b-bf93-46ebc57a05ec/privacy"
-                    )!
-                )
-                .foregroundColor(.gray)
-                Button {
-                    Task {
-                        do {
-                            try await purchaseService.restore()
-                            close = true
-                        } catch {
-                            print(error)
-                        }
-                    }
-                } label: {
-                    Text("Restore")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 16))
-                }
-            }.padding(.vertical)
+            LegalLinksRow { close = true }
             Button {
                 Task {
                     guard let product = purchaseService.products.first else {
@@ -74,12 +45,7 @@ struct OnboardingLast: View {
                 }
             } label: {
                 Text("Support Developer")
-                    .font(.title3)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(10)
+                    .primaryButtonStyle()
             }
             .padding(.horizontal, 40)
             Button {
@@ -107,7 +73,7 @@ struct OnboardingLast: View {
     }
 }
 
-struct OnboardingThree_Previews: PreviewProvider {
+struct OnboardingLast_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingLast(close: .constant(false))
             .environmentObject(PurchaseService(productsId: [""]))
