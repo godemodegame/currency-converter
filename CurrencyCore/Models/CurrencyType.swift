@@ -19,8 +19,7 @@ public enum CurrencyType: String, Codable {
         case "crypto":
             self = .crypto
         default:
-            // If we encounter "jetton" or any unknown type, throw an error
-            // This will allow filtering out invalid currencies during deserialization
+            // Throw on unknown types so invalid currencies are filtered out during deserialization.
             throw DecodingError.dataCorruptedError(
                 in: container,
                 debugDescription: "Unknown currency type: \(rawValue)"

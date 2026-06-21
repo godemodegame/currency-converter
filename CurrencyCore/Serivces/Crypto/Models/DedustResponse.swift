@@ -8,5 +8,3 @@
 public struct CoinGeckoResponse: Decodable {
     let usd: Double
 }
-
-public typealias DedustResponse = CoinGeckoResponse

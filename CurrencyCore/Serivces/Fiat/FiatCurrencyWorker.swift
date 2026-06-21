@@ -12,22 +12,10 @@ public protocol FiatCurrencyWorker: AnyObject {
 }
 
 public final class FiatWorker: FiatCurrencyWorker {
-    private let plistFileUrl: URL?
-
-    public init() {
-        plistFileUrl = Bundle.main.url(
-            forResource: "CurrenciesInfo",
-            withExtension: "plist"
-        )
-    }
+    public init() {}
 
     public func prepareCurrencies(_ dict: ExchangeRatesResponse) throws -> [Currency] {
-        guard let plistFileUrl else {
-            throw CurrencyError.missingPlistFile
-        }
-        let data = try Data(contentsOf: plistFileUrl)
-        let currencyPlist = try PropertyListDecoder()
-            .decode(Plist<CurrencyInfo>.self, from: data)
+        let currencyPlist = try Plist<CurrencyInfo>.load(resource: "CurrenciesInfo")
         return dict.rates.map { rate in
             let info = currencyPlist.currencies.first { $0.code == rate.key }
             return Currency(
