@@ -65,8 +65,12 @@ for fw in "$FRAMEWORKS_DIR"/*.framework; do
 </dict>
 </plist>
 PLIST
-        # Matches the original (working) behavior for not-yet-sealed frameworks;
-        # no re-sign needed for a freshly created plist.
+        # The framework was code-signed during "Embed Frameworks" before this
+        # plist existed, so its signature identifier is the bare binary name
+        # while the new Info.plist declares a reverse-DNS bundle id. Re-sign so
+        # the signature identifier matches CFBundleIdentifier (App Store requires
+        # "Invalid Code Signature Identifier ... must match its Bundle Identifier").
+        resign "$fw"
         continue
     fi
 
