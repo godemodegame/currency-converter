@@ -1,6 +1,6 @@
 //
 //  ListWidgetProvider.swift
-//  CurrencyConverter
+//  ListWidget
 //
 //  Created by Kirill Kirilenko on 03/05/2023.
 //
@@ -115,9 +115,8 @@ struct ListWidgetProvider: IntentTimelineProvider {
             }
             return CurrencyModel(
                 name: currency.code,
-                image: nil,
                 baseName: baseCurrency.code,
-                rate: currency.rate / baseCurrency.rate
+                rate: currency.rate(against: baseCurrency)
             )
         }
     }

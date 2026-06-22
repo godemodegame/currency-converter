@@ -1,5 +1,5 @@
 //
-//  Banner.swift
+//  BannerView.swift
 //  CurrencyConverter
 //
 //  Created by Kirill Kirilenko on 01/05/2023.

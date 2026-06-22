@@ -30,3 +30,32 @@ public struct Currency: Identifiable, Codable {
         self.type = type
     }
 }
+
+public extension Currency {
+    /// This currency's `rate` re-expressed against `base` for `amount` units.
+    ///
+    /// Both rates must share the same reference base (the canonical fetch base
+    /// used by `CurrencyService`). The result is "units of `self` per `amount`
+    /// units of `base`", which is exact because the shared base cancels out.
+    func rate(against base: Currency, amount: Double = 1) -> Double {
+        rate / base.rate * amount
+    }
+
+    /// A copy of this currency with `rate` re-expressed against `base`.
+    func converted(against base: Currency, amount: Double = 1) -> Currency {
+        Currency(
+            name: name,
+            imageSource: imageSource,
+            code: code,
+            rate: rate(against: base, amount: amount),
+            type: type
+        )
+    }
+}
+
+public extension Sequence where Element == Currency {
+    /// Re-expresses every currency in the sequence against `base`.
+    func converted(against base: Currency, amount: Double = 1) -> [Currency] {
+        map { $0.converted(against: base, amount: amount) }
+    }
+}

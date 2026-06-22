@@ -14,16 +14,23 @@ import Subscriptions
 final class CurrenciesListViewModel: ObservableObject {
     // MARK: Public properties
 
-    @Published var currencies: [Currency] = []
+    @Published private(set) var currencies: [Currency] = []
     @Published var error: Error?
     @Published var selectedSegment: CurrenciesListSegment = .favorite
     @Published var searchText = ""
     @Published var showPremium = false
+    /// Published so bookmark state updates re-render the list without a manual
+    /// `objectWillChange.send()`.
+    @Published private(set) var favoriteCodes: Set<String> = []
 
     // MARK: Private properties
 
-    @UserDefault("favoriteCurrencies", defaultValue: [])
+    @UserDefault(UserDefaultsKey.favoriteCurrencies, defaultValue: [])
     private var favoriteCurrencies: [String]
+
+    /// Immutable source list; the displayed `currencies` is derived from it via
+    /// `applyFilters()`, so narrowing by search/segment can always widen back.
+    private var allCurrencies: [Currency] = []
 
     private let purchaseService: PurchaseService
     private let currencyService: any CurrencyServiceProtocol
@@ -37,33 +44,32 @@ final class CurrenciesListViewModel: ObservableObject {
     ) {
         self.currencyService = currencyService
         self.purchaseService = purchaseService
-        $selectedSegment
-            .sink { [weak self] _ in
-                Task {
-                    await self?.loadData()
-                }
-            }.store(in: &bin)
-        $searchText
-            .sink { [weak self] _ in
-                Task {
-                    await self?.loadData()
-                }
-            }.store(in: &bin)
+        favoriteCodes = Set(favoriteCurrencies)
+        // Filtering by segment/search is a pure local re-derivation off the
+        // immutable source — no network refetch and no overlapping load tasks.
+        // We filter with the *emitted* values: `@Published` fires its publisher
+        // in `willSet`, so re-reading `self.selectedSegment` here would observe
+        // the previous value and render results that lag one change behind.
+        Publishers.CombineLatest($selectedSegment, $searchText)
+            .dropFirst()
+            .sink { [weak self] segment, searchText in
+                self?.applyFilters(segment: segment, searchText: searchText)
+            }
+            .store(in: &bin)
     }
 
     // MARK: Public methods
 
     func loadData() async {
-        let savedCurrencies = await currencyService.getSavedCurrencies()
-        if !savedCurrencies.isEmpty, currencies.isEmpty {
-            currencies = savedCurrencies
-                .sorted { favoriteCurrencies.contains($0.code) || $0.code < $1.code }
+        let saved = await currencyService.getSavedCurrencies()
+        if !saved.isEmpty, allCurrencies.isEmpty {
+            allCurrencies = saved
             applyFilters()
         }
         do {
-            currencies = try await currencyService
-                .getCurrencies()
-                .sorted { favoriteCurrencies.contains($0.code) || $0.code < $1.code }
+            let fresh = try await currencyService.getCurrencies()
+            guard !Task.isCancelled else { return }
+            allCurrencies = fresh
             applyFilters()
         } catch {
             self.error = error
@@ -71,38 +77,57 @@ final class CurrenciesListViewModel: ObservableObject {
     }
 
     func isSaved(currency: Currency) -> Bool {
-        favoriteCurrencies.contains(currency.code)
+        favoriteCodes.contains(currency.code)
     }
 
     func pushed(currency: Currency) {
-        if let currencyCode = favoriteCurrencies.first(where: { $0 == currency.code }) {
-            favoriteCurrencies.removeAll { $0 == currencyCode }
-        } else if !purchaseService.hasUnlockedPro && favoriteCurrencies.count >= 5 {
+        if favoriteCodes.contains(currency.code) {
+            favoriteCurrencies.removeAll { $0 == currency.code }
+        } else if !purchaseService.hasUnlockedPro, favoriteCurrencies.count >= 5 {
             showPremium = true
+            return
         } else {
             favoriteCurrencies.append(currency.code)
         }
-        objectWillChange.send()
+        // Refresh the published set so bookmark icons re-render. We intentionally
+        // do not re-filter here: as before, the visible rows stay put while
+        // toggling and the favorites segment settles on the next load.
+        favoriteCodes = Set(favoriteCurrencies)
     }
 
     // MARK: Private methods
 
-    private func applyFilters() {
+    /// Re-derives the displayed list. `segment`/`searchText` default to the
+    /// committed published values (used by the direct `loadData` call); the
+    /// Combine subscription passes the freshly emitted values explicitly to
+    /// avoid `willSet` staleness.
+    private func applyFilters(
+        segment: CurrenciesListSegment? = nil,
+        searchText: String? = nil
+    ) {
+        let segment = segment ?? selectedSegment
+        let searchText = searchText ?? self.searchText
+
+        var result = allCurrencies
         if !searchText.isEmpty {
-            currencies = currencies.filter {
-                $0.name.lowercased().contains(searchText.lowercased())
-                || $0.code.lowercased().contains(searchText.lowercased())
+            let query = searchText.lowercased()
+            result = result.filter {
+                $0.name.lowercased().contains(query)
+                || $0.code.lowercased().contains(query)
             }
         }
-        switch selectedSegment {
+        switch segment {
         case .favorite:
-            currencies = currencies.filter { favoriteCurrencies.contains($0.code) }
+            result = result.filter { favoriteCodes.contains($0.code) }
         case .fiat:
-            currencies = currencies.filter { $0.type == .fiat }
+            result = result.filter { $0.type == .fiat }
         case .crypto:
-            currencies = currencies.filter { $0.type == .crypto }
+            result = result.filter { $0.type == .crypto }
         case .all:
-            return
+            break
+        }
+        currencies = result.sorted {
+            (favoriteCodes.contains($0.code) ? 0 : 1, $0.code) < (favoriteCodes.contains($1.code) ? 0 : 1, $1.code)
         }
     }
 }

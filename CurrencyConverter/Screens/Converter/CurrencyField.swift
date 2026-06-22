@@ -25,6 +25,7 @@ struct CurrencyField: View {
                     .padding()
                     .cornerRadius(10)
                     .keyboardType(.decimalPad)
+                    .accessibilityIdentifier(AXID.Converter.amountField)
                     .onReceive(Just(enteredValue)) { newValue in
                         let filtered = newValue.filter {
                             "0123456789.".contains($0)
@@ -42,6 +43,7 @@ struct CurrencyField: View {
                             .tag(currency.code)
                     }
                 }
+                .accessibilityIdentifier(AXID.Converter.currencyPicker)
             }
         }
     }

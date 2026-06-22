@@ -12,7 +12,7 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
 
     // MARK: Private properties
 
-    @UserDefault("favoriteCurrencies", defaultValue: [])
+    @UserDefault(UserDefaultsKey.favoriteCurrencies, defaultValue: [])
     private var favoriteCurrencies: [String]
 
     private let currencyService: any CurrencyServiceProtocol = CurrencyService()
@@ -23,47 +23,41 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        if let searchTerm {
-            return await search(searchTerm)
-        } else {
-            return await fetchCurrencies()
-        }
+        await provideOptions(searchTerm: searchTerm)
     }
     
     func provideCurrency2OptionsCollection(
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        if let searchTerm {
-            return await search(searchTerm)
-        } else {
-            return await fetchCurrencies()
-        }
+        await provideOptions(searchTerm: searchTerm)
     }
     
     func provideCurrency3OptionsCollection(
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        if let searchTerm {
-            return await search(searchTerm)
-        } else {
-            return await fetchCurrencies()
-        }
+        await provideOptions(searchTerm: searchTerm)
     }
     
     func provideBaseCurrencyOptionsCollection(
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
+        await provideOptions(searchTerm: searchTerm)
+    }
+
+    // MARK: Private methods
+
+    private func provideOptions(
+        searchTerm: String?
+    ) async -> INObjectCollection<CurrencyName> {
         if let searchTerm {
             return await search(searchTerm)
         } else {
             return await fetchCurrencies()
         }
     }
-
-    // MARK: Private methods
 
     private func search(_ searchTerm: String) async -> INObjectCollection<CurrencyName> {
         INObjectCollection(
@@ -106,7 +100,7 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
                         }
                 ),
                 INObjectSection(
-                    title: "Fiat",
+                    title: "Cash",
                     items: currencies
                         .filter { $0.type == .fiat && !favoriteCurrencies.contains($0.code) }
                         .map { currency in

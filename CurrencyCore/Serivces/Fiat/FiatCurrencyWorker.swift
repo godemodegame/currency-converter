@@ -12,23 +12,16 @@ public protocol FiatCurrencyWorker: AnyObject {
 }
 
 public final class FiatWorker: FiatCurrencyWorker {
-    private let plistFileUrl: URL?
-
-    public init() {
-        plistFileUrl = Bundle.main.url(
-            forResource: "CurrenciesInfo",
-            withExtension: "plist"
-        )
-    }
+    public init() {}
 
     public func prepareCurrencies(_ dict: ExchangeRatesResponse) throws -> [Currency] {
-        guard let plistFileUrl else {
-            throw CurrencyError.missingPlistFile
-        }
-        let data = try Data(contentsOf: plistFileUrl)
-        let currencyPlist = try PropertyListDecoder()
-            .decode(Plist<CurrencyInfo>.self, from: data)
-        return dict.rates.map { rate in
+        let currencyPlist = try Plist<CurrencyInfo>.load(resource: "CurrenciesInfo")
+        // Frankfurter omits the base currency from `rates` (it's implied as
+        // `amount`, e.g. USD = 1.0), so fold it back in — otherwise the
+        // canonical base never appears in the list.
+        var rates = dict.rates
+        rates[dict.base] = dict.amount
+        return rates.map { rate in
             let info = currencyPlist.currencies.first { $0.code == rate.key }
             return Currency(
                 name: info?.name ?? "",

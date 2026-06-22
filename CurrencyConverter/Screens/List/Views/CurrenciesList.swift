@@ -17,26 +17,40 @@ struct CurrenciesList: View {
             Section {
                 Picker("Picker", selection: $viewModel.selectedSegment) {
                     ForEach(CurrenciesListSegment.allCases, id: \.self) {
-                        Text($0.rawValue.capitalized)
+                        Text($0.title)
                     }
                 }
                 .pickerStyle(.segmented)
+                .accessibilityIdentifier(AXID.List.segmentedControl)
             }
             .clearRow()
 
-            ForEach(viewModel.currencies) { currency in
-                Button { [weak viewModel] in
-                    viewModel?.pushed(currency: currency)
-                } label: {
-                    CurrencyRow(
-                        currency: currency,
-                        type: .selection(
-                            viewModel.isSaved(
-                                currency: currency
+            Section {
+                ForEach(viewModel.currencies) { currency in
+                    Button { [weak viewModel] in
+                        viewModel?.pushed(currency: currency)
+                    } label: {
+                        CurrencyRow(
+                            currency: currency,
+                            type: .selection(
+                                viewModel.isSaved(
+                                    currency: currency
+                                )
                             )
-                        )
-                    ).foregroundColor(.primary)
+                        ).foregroundColor(.primary)
+                    }
+                    .accessibilityIdentifier(AXID.List.row(currency.code))
+                    .accessibilityValue(
+                        viewModel.isSaved(currency: currency)
+                            ? AXID.Value.saved
+                            : AXID.Value.unsaved
+                    )
                 }
+            } footer: {
+                Text("Exchange rates by Frankfurter (cash) & CoinGecko (crypto)")
+                    .font(.footnote)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
             }
         }
         .sheet(isPresented: $viewModel.showPremium) {

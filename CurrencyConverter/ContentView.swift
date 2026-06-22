@@ -28,6 +28,7 @@ struct ContentView: View {
                         } label: {
                             Text("Add")
                         }
+                        .accessibilityIdentifier(AXID.Nav.addButton)
                     }
 
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -37,6 +38,7 @@ struct ContentView: View {
                             } label: {
                                 Text("Remove ads")
                             }
+                            .accessibilityIdentifier(AXID.Nav.removeAdsButton)
                         }
                     }
                 }.sheet(isPresented: $showOnboarding) {
@@ -47,11 +49,9 @@ struct ContentView: View {
                     Analytics.logEvent("open app", parameters: [:])
                     if isFirstOpen {
                         showOnboarding.toggle()
-                        UserDefaults(
-                            suiteName: "group.gmg.CurrencyConverter"
-                        )?.set(
-                            ["USD", "EUR", "BTC"],
-                            forKey: "favoriteCurrencies"
+                        AppGroup.userDefaults.set(
+                            CurrencyDefaults.favoriteCodes,
+                            forKey: UserDefaultsKey.favoriteCurrencies
                         )
                     }
                 }
