@@ -35,68 +35,45 @@ that version for review.
 
 ---
 
-## One-time setup
+## Setup status — already configured ✅
 
-Do these once; afterwards every merge just works.
+The one-time setup below has been done. For reference, the pieces are:
 
-### 1. App Store Connect API key
+- **App Store Connect API key** (App Manager role) — `ASC_KEY_ID` / `ASC_ISSUER_ID` / `ASC_KEY_CONTENT`.
+- **Signing storage:** private repo `godemodegame/ios-certificates`, populated via
+  `fastlane match appstore` (Apple Distribution cert + App Store profiles for the
+  3 bundle ids), encrypted with `MATCH_PASSWORD`.
+- **CI access to the certs repo:** a **read-only SSH deploy key** on
+  `ios-certificates`; its private half is the `MATCH_SSH_KEY` secret, and
+  `MATCH_GIT_URL` is the SSH form `git@github.com:godemodegame/ios-certificates.git`.
+  The workflow writes the key to `~/.ssh` and match clones over SSH.
 
-App Store Connect → **Users and Access → Integrations → App Store Connect API**
-→ create a **Team Key** with the **App Manager** role. Download the `.p8`
-(one-time download). Note the **Key ID** and the **Issuer ID** at the top.
+The 6 GitHub Actions secrets on this repo:
 
-Base64-encode the key (no newline):
+| Secret | What |
+|---|---|
+| `ASC_KEY_ID` | API Key ID |
+| `ASC_ISSUER_ID` | API Issuer ID |
+| `ASC_KEY_CONTENT` | base64 of the `.p8` |
+| `MATCH_GIT_URL` | `git@github.com:godemodegame/ios-certificates.git` |
+| `MATCH_PASSWORD` | passphrase that encrypts the match repo |
+| `MATCH_SSH_KEY` | private deploy key for read access to the match repo |
 
-```bash
-base64 -i AuthKey_XXXXXXXXXX.p8 | pbcopy   # this is ASC_KEY_CONTENT
-```
+> **Keep the `MATCH_PASSWORD` safe** (password manager). You need it to run match
+> locally again — e.g. to renew the certificate or add the cert on another Mac.
 
-### 2. A private repo for `fastlane match`
-
-`match` stores your **distribution certificate + App Store provisioning profiles**
-encrypted in a git repo. Create an **empty private** repo (e.g.
-`godemodegame/ios-certificates`).
-
-Populate it once from your Mac (this creates the cert + the three profiles in
-your Apple account and pushes them encrypted):
+### Re-running match locally (renewals, new Mac)
 
 ```bash
 cd /Users/godemodegame/Documents/currency-converter
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"   # fastlane needs Ruby 3.x, not system 2.6
 bundle install
 
-export MATCH_GIT_URL="https://github.com/godemodegame/ios-certificates.git"
-export MATCH_PASSWORD="choose-a-strong-passphrase"   # encrypts the repo contents
-export ASC_KEY_ID="XXXXXXXXXX"
-export ASC_ISSUER_ID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-export ASC_KEY_CONTENT="$(base64 -i AuthKey_XXXXXXXXXX.p8)"
-
-# Read-write here (drops the readonly the CI lane uses) so it can mint + store them:
-bundle exec fastlane match appstore
+export MATCH_GIT_URL="https://github.com/godemodegame/ios-certificates.git"  # https is fine locally
+export MATCH_PASSWORD="<your saved passphrase>"
+bundle exec fastlane match appstore \
+  --api_key_path /path/to/asc_api_key.json   # {key_id, issuer_id, key, in_house:false}
 ```
-
-> If you already have an App Store distribution certificate you want to keep,
-> run `fastlane match import` instead so match adopts it rather than creating a new one.
-
-### 3. GitHub repo secrets
-
-Repo → **Settings → Secrets and variables → Actions → New repository secret**:
-
-| Secret | Value |
-|---|---|
-| `ASC_KEY_ID` | the Key ID from step 1 |
-| `ASC_ISSUER_ID` | the Issuer ID from step 1 |
-| `ASC_KEY_CONTENT` | base64 of the `.p8` (step 1) |
-| `MATCH_GIT_URL` | `https://github.com/godemodegame/ios-certificates.git` |
-| `MATCH_PASSWORD` | the passphrase from step 2 |
-| `MATCH_GIT_BASIC_AUTHORIZATION` | `base64 -i <(printf 'USER:GHP_TOKEN')` — a PAT with read access to the certs repo, so CI can clone it over HTTPS |
-
-`MATCH_GIT_BASIC_AUTHORIZATION` example:
-
-```bash
-printf 'godemodegame:ghp_yourPAT' | base64   # paste result as the secret
-```
-
-(Use a fine-grained PAT scoped to **read-only Contents** on the certs repo.)
 
 ---
 

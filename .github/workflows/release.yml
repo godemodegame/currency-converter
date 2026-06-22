@@ -37,6 +37,19 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      - name: Set up SSH for the signing (match) repo
+        env:
+          MATCH_SSH_KEY: ${{ secrets.MATCH_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "$MATCH_SSH_KEY" > ~/.ssh/match_ed25519
+          chmod 600 ~/.ssh/match_ed25519
+          printf '%s\n' \
+            'Host github.com' \
+            '  IdentityFile ~/.ssh/match_ed25519' \
+            '  IdentitiesOnly yes' \
+            '  StrictHostKeyChecking accept-new' >> ~/.ssh/config
+
       - name: Decide lane + version
         id: plan
         run: |
@@ -61,10 +74,9 @@ jobs:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }} # base64 of the .p8
-          # fastlane match (signing storage)
+          # fastlane match (signing storage) — cloned over SSH via the deploy key set up above
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }} # base64 of "user:PAT"
           # Marketing version for a tag-triggered release (empty for beta).
           APP_VERSION: ${{ steps.plan.outputs.version }}
           # GITHUB_RUN_NUMBER is injected automatically and becomes the build number.
