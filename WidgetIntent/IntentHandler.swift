@@ -100,7 +100,7 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
                         }
                 ),
                 INObjectSection(
-                    title: "Fiat",
+                    title: "Cash",
                     items: currencies
                         .filter { $0.type == .fiat && !favoriteCurrencies.contains($0.code) }
                         .map { currency in

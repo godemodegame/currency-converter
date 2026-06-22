@@ -17,7 +17,7 @@ struct OnboardingThird: View {
                 .frame(width: 200, height: 200)
             Text("Crypto support")
                 .font(.title)
-            Text("Not only fiat currencies are available, but also crypto")
+            Text("Not only regular money is available, but also crypto")
                 .font(.title3)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
@@ -33,6 +33,7 @@ struct OnboardingThird: View {
             }
             .padding(.horizontal, 40)
             .padding(.bottom)
+            .accessibilityIdentifier(AXID.Onboarding.thirdContinue)
         }.navigationBarBackButtonHidden(true)
     }
 }

@@ -17,10 +17,11 @@ struct CurrenciesList: View {
             Section {
                 Picker("Picker", selection: $viewModel.selectedSegment) {
                     ForEach(CurrenciesListSegment.allCases, id: \.self) {
-                        Text($0.rawValue.capitalized)
+                        Text($0.title)
                     }
                 }
                 .pickerStyle(.segmented)
+                .accessibilityIdentifier(AXID.List.segmentedControl)
             }
             .clearRow()
 
@@ -37,6 +38,12 @@ struct CurrenciesList: View {
                         )
                     ).foregroundColor(.primary)
                 }
+                .accessibilityIdentifier(AXID.List.row(currency.code))
+                .accessibilityValue(
+                    viewModel.isSaved(currency: currency)
+                        ? AXID.Value.saved
+                        : AXID.Value.unsaved
+                )
             }
         }
         .sheet(isPresented: $viewModel.showPremium) {
