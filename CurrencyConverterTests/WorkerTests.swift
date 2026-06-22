@@ -50,12 +50,17 @@ import CurrencyCore
 }
 
 @Suite struct CryptoWorkerTests {
-    @Test func mapsGeckoIdToCodeAndInvertsRate() throws {
-        let dict = try decodeJSON([String: CoinGeckoResponse].self, #"{"bitcoin":{"usd":50000}}"#)
-        let result = try CryptoWorker().prepareCurrencies(dict)
+    @Test func buildsCurrencyFromMarketRowAndInvertsRate() throws {
+        let markets = try decodeJSON(
+            [CoinGeckoMarket].self,
+            #"[{"symbol":"btc","name":"Bitcoin","image":"https://x/btc.png","current_price":50000}]"#
+        )
+        let result = try CryptoWorker().prepareCurrencies(markets)
 
+        // Code is the upper-cased ticker; name/icon come straight from the row.
         let btc = try #require(result.first { $0.code == "BTC" })
         #expect(btc.type == .crypto)
+        #expect(btc.name == "Bitcoin")
         // USD-priced rate is inverted to "units per USD".
         #expect(isApprox(btc.rate, 1.0 / 50000))
         if case .image = btc.imageSource {
@@ -65,15 +70,18 @@ import CurrencyCore
         }
     }
 
-    @Test func dropsUnknownCoinIds() throws {
-        let dict = try decodeJSON(
-            [String: CoinGeckoResponse].self,
-            #"{"bitcoin":{"usd":50000},"made-up-coin":{"usd":1}}"#
+    @Test func dropsRowsWithoutAUsablePrice() throws {
+        let markets = try decodeJSON(
+            [CoinGeckoMarket].self,
+            #"""
+            [{"symbol":"btc","name":"Bitcoin","image":"https://x/btc.png","current_price":50000},
+             {"symbol":"dead","name":"Dead Coin","image":"https://x/dead.png","current_price":null}]
+            """#
         )
-        let result = try CryptoWorker().prepareCurrencies(dict)
+        let result = try CryptoWorker().prepareCurrencies(markets)
 
         #expect(result.contains { $0.code == "BTC" })
-        // "made-up-coin" has no app-code mapping → dropped.
+        // The null-priced row can't yield a rate → dropped.
         #expect(result.count == 1)
     }
 }

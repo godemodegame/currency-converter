@@ -23,7 +23,7 @@ xcodebuild -list -project CurrencyConverter.xcodeproj
 
 The project has two **Swift Testing** logic bundles (Xcode 16+; `import Testing`, `@Test`/`#expect`), run via the shared **`CurrencyConverterTests`** scheme, plus a separate **XCUITest** bundle (`import XCTest`) run via its own **`CurrencyConverterUITests`** scheme (see "UI Tests (XCUITest)" below):
 
-- **CurrencyCoreTests** — framework-hosted logic tests for `CurrencyCore` (conversion math, `CoinMapping`, `Plist.load`, the property wrappers, `UserDefaultsMigrator`, `NetworkClient`/managers via a mock client + URLProtocol stub, and `CurrencyService` via mock workers/managers).
+- **CurrencyCoreTests** — framework-hosted logic tests for `CurrencyCore` (conversion math, `Plist.load`, the property wrappers, `UserDefaultsMigrator`, `NetworkClient`/managers via a mock client + URLProtocol stub, and `CurrencyService` via mock workers/managers).
 - **CurrencyConverterTests** — app-hosted (`TEST_HOST` = the app) tests for the workers (they read the bundled `*.plist` via `Bundle.main`, which only resolves inside the app), the `ConverterViewModel`/`CurrenciesListViewModel` derivation (black-box through the public API), the `PurchaseService` gate, and StoreKit-backed IAP tests (`PurchaseServiceStoreKitTests` + `Products.storekit`).
 - **CurrencyConverterUITests** — black-box **XCUITest** target (`com.apple.product-type.bundle.ui-testing`, `TEST_TARGET_NAME` = the app) driving the real app on the simulator: launch/onboarding, the converter, the currencies list (segments, search, favoriting), and the subscription paywall.
 
@@ -44,7 +44,7 @@ xcodebuild test -scheme CurrencyConverterTests -project CurrencyConverter.xcodep
 ```
 
 Conventions worth keeping:
-- Tests touching shared `AppGroup.userDefaults` (the `favoriteCurrencies`/`savedCurrencies` keys aren't injectable in the ViewModels / `CurrencyService`) must be **`.serialized`**. The two ViewModel suites are nested under one `.serialized` parent so they don't race each other; `URLProtocolStub`-based tests are serialized for the same reason (shared static state).
+- Tests touching shared `AppGroup.userDefaults` (the `favoriteCurrencies` key isn't injectable in the ViewModels) must be **`.serialized`**. The two ViewModel suites are nested under one `.serialized` parent so they don't race each other; `URLProtocolStub`-based tests are serialized for the same reason (shared static state). `CurrencyServiceTests` is **no longer** serialized: its persistence (`savedCurrencies`) now goes through an injected `CurrencySnapshotStore`, so each test uses a private in-memory store and touches no shared state.
 - ViewModel inputs (selected currency / amount / segment / search) can be set before or after `loadData()`: both the direct `recompute()`/`applyFilters()` inside `loadData` **and** the post-load Combine path now derive off committed/emitted values. (The Combine sinks pass the publisher's emitted values into `recompute(...)`/`applyFilters(...)` rather than re-reading the `@Published` properties, which would otherwise be stale-by-one because `@Published` fires in `willSet` — this was a real bug that showed the *previous* segment/search/base in the live UI; see the ViewModels section.)
 - The logic test targets are registered in the hand-managed pbxproj (see below) — adding a new test file means wiring it into the right test target, same as any source file.
 
@@ -96,11 +96,11 @@ The app handles two types of currencies (`CurrencyType` enum):
 **CurrencyService (Actor):**
 
 Located in `CurrencyCore/CurrencyService.swift`, this is the central service that:
-- Fetches exchange rates from two sources **concurrently** (`async let`) via a network-manager + worker pattern; the call fails atomically if either source throws
+- Fetches exchange rates from two sources **concurrently** (`async let`) via a network-manager + worker pattern; the call fails atomically if either source throws (the crypto source paginates internally and *tolerates* a failed later page — returning the coins already fetched — but a failed **first** crypto page still throws, so the whole refresh is atomic at the service level)
 - Aggregates fiat and crypto currencies into a unified list (sorted by `code`)
 - Fetches every rate against a single **canonical base (USD)**; callers re-express the list against a user-selected currency on the client via `Currency.converted(against:)` (exact, since all rates share the base). There is intentionally **no** per-call base parameter — the crypto source is always priced in USD, so a mixed base would give inconsistent cross-rates
 - Caches the combined list in-memory with a **TTL** (`cacheTTL`, default 300s): a call within the window returns the cache, otherwise it refetches
-- Manages currency persistence via the `@CodableUserDefault` wrapper (`savedCurrencies`)
+- Manages currency persistence via an injected `CurrencySnapshotStore` (default `FileCurrencySnapshotStore`, a JSON file in the app-group container — **not** UserDefaults, since the list grew to ~1000 coins; injectable so tests use an in-memory double)
 - Runs the old→app-group `UserDefaults` migration once at `init` (see `UserDefaultsMigrator` below); `getSavedCurrencies()` is now just the persisted read
 
 Each source is a **protocol + concrete pair**, injected into `CurrencyService.init` (defaults shown), so they can be swapped for tests/previews:
@@ -109,12 +109,12 @@ Each source is a **protocol + concrete pair**, injected into `CurrencyService.in
    - Source: **Frankfurter API** (`https://api.frankfurter.app`), response type `ExchangeRatesResponse`
    - `FiatWorker` enriches rates with country flags / metadata from `CurrenciesInfo.plist`
 2. **Crypto**: `CryptoNetworkManager` (concrete `CoinGeckoNetworkManager`) + `CryptoCurrencyWorker` (concrete `CryptoWorker`)
-   - Source: **CoinGecko API** (`https://api.coingecko.com`), response type `[String: CoinGeckoResponse]`
-   - `CoinGeckoNetworkManager` maps app currency codes ↔ CoinGecko IDs via the canonical `CoinMapping` (single source of truth); `CryptoWorker` enriches with metadata from `CryptoInfo.plist`
+   - Source: **CoinGecko API** (`https://api.coingecko.com`), endpoint `/api/v3/coins/markets`, response type `[CoinGeckoMarket]`
+   - `CoinGeckoNetworkManager` pulls the **top coins by market cap** (default top 1000 = 4 pages × `per_page=250`, paginated sequentially; configurable via `init(pageCount:perPage:)`). Each market row already carries name/symbol/icon/price, so there is **no** local id-map or metadata plist — `CryptoWorker` maps a row straight to a `Currency` (code = upper-cased ticker, `rate = 1 / current_price`), dropping rows without a usable price/icon. Same-ticker collisions (and any crypto ticker equal to a fiat code) are de-duplicated in `CurrencyService` when the lists are combined: fiat wins, and among crypto the larger market cap wins.
 
-Both concrete network managers fetch through a shared `NetworkClient` (`CurrencyCore/Serivces/NetworkClient.swift`, default `URLSessionNetworkClient`), which validates the HTTP status (throws on non-2xx) and decodes — replacing the duplicated `URLSession` + `JSONDecoder` boilerplate. Managers build requests with the protocol-extension convenience `get(baseURL:path:queryItems:as:)`, which assembles the URL via `URLComponents` (percent-encoding query values) and throws `.invalidURL` — so each manager is a single call with no `URL(string:)` boilerplate. Both workers load their `*.plist` metadata via the shared `Plist.load(resource:)` helper. Failures surface as `CurrencyError` cases (`.invalidURL`, `.invalidResponse`, `.httpStatus`, `.decodingFailed`, `.missingPlistFile`). The client is injectable via each manager's `init` for tests.
+Both concrete network managers fetch through a shared `NetworkClient` (`CurrencyCore/Serivces/NetworkClient.swift`, default `URLSessionNetworkClient`), which validates the HTTP status (throws on non-2xx) and decodes — replacing the duplicated `URLSession` + `JSONDecoder` boilerplate. Managers build requests with the protocol-extension convenience `get(baseURL:path:queryItems:as:)`, which assembles the URL via `URLComponents` (percent-encoding query values) and throws `.invalidURL` — so each manager is a single call with no `URL(string:)` boilerplate. The fiat worker loads its `CurrenciesInfo.plist` metadata via the shared `Plist.load(resource:)` helper (the crypto worker no longer needs a plist). Failures surface as `CurrencyError` cases (`.invalidURL`, `.invalidResponse`, `.httpStatus`, `.decodingFailed`, `.missingPlistFile`). The client is injectable via each manager's `init` for tests.
 
-> Note: the project previously used the Dedust API. `CoinGeckoResponse` still lives in `DedustResponse.swift` (the filename is a historical artifact). New code should reference the CoinGecko names.
+> Note: the project previously used the Dedust API. `CoinGeckoMarket` (the `/coins/markets` row) still lives in `DedustResponse.swift` (the filename is a historical artifact). New code should reference the CoinGecko names.
 
 **Data Flow:**
 ```
@@ -131,13 +131,13 @@ UI re-expresses the list against the selected currency client-side:
 
 Two property wrappers (in `CurrencyCore/PropertyWrappers/`) both default to the shared suite via `AppGroup.userDefaults` (suite `group.gmg.CurrencyConverter`, falling back to `.standard` if unavailable), enabling data sharing between the main app and widget extension. Pass `userDefaults: .standard` explicitly to read pre-migration (non-app-group) keys. The suite name, the UserDefaults keys, and the first-launch default favorites are centralized in `AppGroup`, `UserDefaultsKey`, and `CurrencyDefaults` (all in `UserDefault.swift`) — use these constants rather than string literals.
 - `@UserDefault` (`UserDefault.swift`) — for values UserDefaults stores **natively** (primitives, `Data`, and `[String]` such as `favoriteCurrencies`). No JSON involved.
-- `@CodableUserDefault` (`CodableUserDefault.swift`) — for `Codable` types stored as **JSON `Data`** (e.g. `[Currency]` under `savedCurrencies`), via `JSONEncoder`/`JSONDecoder`.
+- `@CodableUserDefault` (`CodableUserDefault.swift`) — for `Codable` types stored as **JSON `Data`** in UserDefaults, via `JSONEncoder`/`JSONDecoder`. (The currency snapshot no longer uses this — it moved to `FileCurrencySnapshotStore`; the wrapper remains a general utility.)
 
-> Wire-format caution: `favoriteCurrencies` (key `UserDefaultsKey.favoriteCurrencies`) is a native `[String]` array — seeded on first launch in `ContentView` from `CurrencyDefaults.favoriteCodes` — while `savedCurrencies` is JSON `Data`. Keep each key on its matching wrapper — switching a key's representation would orphan existing users' stored data.
+> Wire-format caution: `favoriteCurrencies` (key `UserDefaultsKey.favoriteCurrencies`) is a native `[String]` array in UserDefaults — seeded on first launch in `ContentView` from `CurrencyDefaults.favoriteCodes`. The currency snapshot (`savedCurrencies`) now lives in a **JSON file** in the app-group container (`FileCurrencySnapshotStore`), which reads the legacy `savedCurrencies` UserDefaults key once for existing installs and then clears it. Don't switch a key's representation — it would orphan existing users' stored data.
 
 **Migration (`UserDefaultsMigrator`):**
 
-`CurrencyCore/Migration/UserDefaultsMigrator.swift` copies pre-app-group keys (`savedCurrencies`, `favoriteCurrencies`) from `.standard` into the shared suite. It is **idempotent**: a key is copied only when the legacy store has a value AND the shared store does not (never clobbers newer shared data), then the legacy key is cleared. It runs once from `CurrencyService.init` and is injectable for tests.
+`CurrencyCore/Migration/UserDefaultsMigrator.swift` copies pre-app-group keys (`savedCurrencies`, `favoriteCurrencies`) from `.standard` into the shared suite. It is **idempotent**: a key is copied only when the legacy store has a value AND the shared store does not (never clobbers newer shared data), then the legacy key is cleared. It runs once from `CurrencyService.init` and is injectable for tests. (For `savedCurrencies` this is now a first hop: the migrator lands it in the shared suite, and `FileCurrencySnapshotStore` then reads that key once and moves the value into its JSON file — see the snapshot store above.)
 
 **ViewModels:**
 
@@ -180,4 +180,4 @@ struct Currency: Identifiable, Codable {
 
 **ImageSource** — Enum supporting both flag emojis (fiat) and remote URLs (crypto).
 
-**Plist<T>** (`CurrencyCore/Models/Plist.swift`) — generic `{ currencies: [T] }` wrapper used to decode `CurrenciesInfo.plist` / `CryptoInfo.plist`.
+**Plist<T>** (`CurrencyCore/Models/Plist.swift`) — generic `{ currencies: [T] }` wrapper used to decode `CurrenciesInfo.plist` (the fiat metadata).

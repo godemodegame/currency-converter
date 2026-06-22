@@ -36,8 +36,10 @@ public actor CurrencyService: CurrencyServiceProtocol {
     private var currencies: [Currency] = []
     private var lastFetch: Date?
 
-    @CodableUserDefault(UserDefaultsKey.savedCurrencies, defaultValue: [])
-    private var savedCurrencies: [Currency]
+    /// Persists the last-known list (read by the app on cold start and by the
+    /// widget's config picker). File-backed in production so the now-~1000-item
+    /// list doesn't bloat the shared UserDefaults suite.
+    private let snapshotStore: CurrencySnapshotStore
 
     // MARK: Lifecycle
     public init(
@@ -45,6 +47,7 @@ public actor CurrencyService: CurrencyServiceProtocol {
         fiatWorker: FiatCurrencyWorker = FiatWorker(),
         cryptoNetworkManager: CryptoNetworkManager = CoinGeckoNetworkManager(),
         cryptoWorker: CryptoCurrencyWorker = CryptoWorker(),
+        snapshotStore: CurrencySnapshotStore = FileCurrencySnapshotStore(),
         migrator: UserDefaultsMigrator = UserDefaultsMigrator(),
         cacheTTL: TimeInterval = 300
     ) {
@@ -52,6 +55,7 @@ public actor CurrencyService: CurrencyServiceProtocol {
         self.fiatWorker = fiatWorker
         self.cryptoNetworkManager = cryptoNetworkManager
         self.cryptoWorker = cryptoWorker
+        self.snapshotStore = snapshotStore
         self.cacheTTL = cacheTTL
         migrator.migrateIfNeeded()
     }
@@ -59,7 +63,7 @@ public actor CurrencyService: CurrencyServiceProtocol {
     // MARK: - CurrencyServiceProtocol
 
     public func getSavedCurrencies() async -> [Currency] {
-        savedCurrencies
+        snapshotStore.load()
     }
 
     public func getCurrencies() async throws -> [Currency] {
@@ -77,10 +81,17 @@ public actor CurrencyService: CurrencyServiceProtocol {
         let fiat = try fiatWorker.prepareCurrencies(try await fiatResponse)
         let crypto = try cryptoWorker.prepareCurrencies(try await cryptoResponse)
 
-        let combined = (fiat + crypto).sorted { $0.code < $1.code }
+        // Dedupe by code: `Currency.id` is the code, and the widened crypto set
+        // can collide (two coins sharing a ticker, or a crypto ticker equal to a
+        // fiat code). Fiat is listed first so it wins such a clash; among crypto,
+        // market-cap order means the largest coin wins.
+        var seenCodes = Set<String>()
+        let combined = (fiat + crypto)
+            .filter { seenCodes.insert($0.code).inserted }
+            .sorted { $0.code < $1.code }
         currencies = combined
         lastFetch = Date()
-        savedCurrencies = combined
+        snapshotStore.save(combined)
         return combined
     }
 }

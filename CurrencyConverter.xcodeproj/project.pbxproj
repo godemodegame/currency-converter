@@ -28,7 +28,6 @@
 		776DD13B65F2209604039566 /* AccessibilityIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B7CFF9EFF013DDE34EC39 /* AccessibilityIdentifiers.swift */; };
 		7C58426156A57D349938E095 /* SubscriptionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB19C0B466FA25063362BAF7 /* SubscriptionUITests.swift */; };
 		80AE14E3642DCDBFE9C8B548 /* CurrencyMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ECAFF1484B066E11CC2815 /* CurrencyMathTests.swift */; };
-		8227D9EA448B022B77A330B0 /* CoinMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E4243DEE7CEF202C75C800 /* CoinMappingTests.swift */; };
 		863D40C7282B0FEB0493A2D0 /* PropertyWrapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58A298682AAB05BF8AA4FD2 /* PropertyWrapperTests.swift */; };
 		A2607CCBCFC398DA986FAE6F /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC88237F315043978AA8F522 /* ViewModelTests.swift */; };
 		A328F32C83E036FF7AF5564D /* WorkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A5A52CA174CC8C4D27DB38 /* WorkerTests.swift */; };
@@ -44,7 +43,6 @@
 		C144B0402A02F0EA005CEB87 /* WidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C144B03E2A02F0A6005CEB87 /* WidgetEntry.swift */; };
 		C144B0432A02F127005CEB87 /* ListWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C144B0412A02F116005CEB87 /* ListWidgetProvider.swift */; };
 		C144B0482A02FDC9005CEB87 /* CurrenciesInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1492E0729FD22FB00D040C6 /* CurrenciesInfo.plist */; };
-		C144B0492A02FDC9005CEB87 /* CryptoInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1FBD03A2A0272D000E29CC6 /* CryptoInfo.plist */; };
 		C144B04B2A0306AC005CEB87 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C144B04A2A0306AC005CEB87 /* AppDelegate.swift */; };
 		C144B04D2A030AD3005CEB87 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C144B04C2A030AD2005CEB87 /* GoogleService-Info.plist */; };
 		C144B04F2A030C7F005CEB87 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C144B04E2A030C7F005CEB87 /* FirebaseAnalyticsSwift */; };
@@ -92,9 +90,7 @@
 		C1E982A929FED5900042B952 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E982A829FED5900042B952 /* Onboarding.swift */; };
 		C1FBD0372A026CB700E29CC6 /* CryptoNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0362A026CB700E29CC6 /* CryptoNetworkManager.swift */; };
 		C1FBD0392A02719500E29CC6 /* DedustResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0382A02719500E29CC6 /* DedustResponse.swift */; };
-		C1FBD03B2A0272D000E29CC6 /* CryptoInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1FBD03A2A0272D000E29CC6 /* CryptoInfo.plist */; };
 		C1FBD0432A027D8400E29CC6 /* CryptoWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0422A027D8400E29CC6 /* CryptoWorker.swift */; };
-		C1FBD0472A027F1600E29CC6 /* CryptoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0462A027F1600E29CC6 /* CryptoInfo.swift */; };
 		C1FBD04A2A0289D600E29CC6 /* CachedAsyncImage in Frameworks */ = {isa = PBXBuildFile; productRef = C1FBD0492A0289D600E29CC6 /* CachedAsyncImage */; };
 		C1FBD0582A02A37200E29CC6 /* bitcoin.json in Resources */ = {isa = PBXBuildFile; fileRef = C1FBD0572A02A37200E29CC6 /* bitcoin.json */; };
 		C1FBD05A2A02A3A400E29CC6 /* OnboardingThird.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0592A02A3A400E29CC6 /* OnboardingThird.swift */; };
@@ -112,8 +108,8 @@
 		C1FBD09C2A02A70200E29CC6 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0642A02A4F700E29CC6 /* IntentHandler.swift */; };
 		C1FBD09D2A02A77B00E29CC6 /* ListWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = C1FBD0902A02A5A000E29CC6 /* ListWidget.intentdefinition */; };
 		C626A16D22B58316DEE00B47 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D75E48589176D24BD78981 /* NetworkClient.swift */; };
+		AA01CE55F0A0001000000001 /* CurrencySnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA01CE55F0A0001000000002 /* CurrencySnapshotStore.swift */; };
 		C9CE3C32DA8B1F0065476715 /* CurrencyServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409DEA44324B6B3019B5038D /* CurrencyServiceTests.swift */; };
-		CA5D016D3C7C9C73F51869CB /* CoinMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD656C061AF948278E1F50CE /* CoinMapping.swift */; };
 		CBA086BCF81626723D51C78F /* PurchaseServiceStoreKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D24FAA9B1BFB367E1E2ACFA /* PurchaseServiceStoreKitTests.swift */; };
 		D0E5A110000000000000F0F2 /* SharedUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E5A110000000000000F0F1 /* SharedUI.swift */; };
 		D269EAB113C86234519DDA53 /* CurrencyCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1492DDE29FD1C1800D040C6 /* CurrencyCore.framework */; };
@@ -220,6 +216,7 @@
 
 /* Begin PBXFileReference section */
 		07D75E48589176D24BD78981 /* NetworkClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
+		AA01CE55F0A0001000000002 /* CurrencySnapshotStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CurrencySnapshotStore.swift; sourceTree = "<group>"; };
 		08F0439E240D24D61E799F48 /* CurrencyConverterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyConverterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C2C3C3013E738EC7341B726 /* PurchaseServiceTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PurchaseServiceTests.swift; sourceTree = "<group>"; };
 		2D24FAA9B1BFB367E1E2ACFA /* PurchaseServiceStoreKitTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PurchaseServiceStoreKitTests.swift; sourceTree = "<group>"; };
@@ -245,7 +242,6 @@
 		A49584A6A7F186870080EB63 /* CurrencyCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58A298682AAB05BF8AA4FD2 /* PropertyWrapperTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PropertyWrapperTests.swift; sourceTree = "<group>"; };
 		A9B8F42382AB47FF2FEA0C33 /* TestSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TestSupport.swift; path = Support/TestSupport.swift; sourceTree = "<group>"; };
-		A9E4243DEE7CEF202C75C800 /* CoinMappingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CoinMappingTests.swift; sourceTree = "<group>"; };
 		AC88237F315043978AA8F522 /* ViewModelTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 		ACD52E1A08DB8C6833A59D6E /* UITestCase.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UITestCase.swift; sourceTree = "<group>"; };
 		B4D3E93AB0AEC2FE55E054E3 /* CodableUserDefault.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CodableUserDefault.swift; sourceTree = "<group>"; };
@@ -302,9 +298,7 @@
 		C1E982A829FED5900042B952 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		C1FBD0362A026CB700E29CC6 /* CryptoNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetworkManager.swift; sourceTree = "<group>"; };
 		C1FBD0382A02719500E29CC6 /* DedustResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DedustResponse.swift; sourceTree = "<group>"; };
-		C1FBD03A2A0272D000E29CC6 /* CryptoInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = CryptoInfo.plist; sourceTree = "<group>"; };
 		C1FBD0422A027D8400E29CC6 /* CryptoWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoWorker.swift; sourceTree = "<group>"; };
-		C1FBD0462A027F1600E29CC6 /* CryptoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoInfo.swift; sourceTree = "<group>"; };
 		C1FBD0572A02A37200E29CC6 /* bitcoin.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bitcoin.json; sourceTree = "<group>"; };
 		C1FBD0592A02A3A400E29CC6 /* OnboardingThird.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingThird.swift; sourceTree = "<group>"; };
 		C1FBD05F2A02A4F600E29CC6 /* WidgetIntent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetIntent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -325,7 +319,6 @@
 		CB19C0B466FA25063362BAF7 /* SubscriptionUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubscriptionUITests.swift; sourceTree = "<group>"; };
 		D0E5A110000000000000F0F1 /* SharedUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUI.swift; sourceTree = "<group>"; };
 		D2D29D4B2A0FF04C52750848 /* UserDefaultsMigrator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserDefaultsMigrator.swift; sourceTree = "<group>"; };
-		DD656C061AF948278E1F50CE /* CoinMapping.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CoinMapping.swift; sourceTree = "<group>"; };
 		E6505CA463C68CA64C26D9C6 /* CurrencyCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CurrencyCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC98F32CA7C2ECE1A2E1EC1C /* Products.storekit */ = {isa = PBXFileReference; includeInIndex = 1; path = Products.storekit; sourceTree = "<group>"; };
 		F6A5A52CA174CC8C4D27DB38 /* WorkerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WorkerTests.swift; sourceTree = "<group>"; };
@@ -438,7 +431,6 @@
 			isa = PBXGroup;
 			children = (
 				B809D2813189DCFB6AC3AF9C /* CodableModelTests.swift */,
-				A9E4243DEE7CEF202C75C800 /* CoinMappingTests.swift */,
 				97ECAFF1484B066E11CC2815 /* CurrencyMathTests.swift */,
 				409DEA44324B6B3019B5038D /* CurrencyServiceTests.swift */,
 				5031D65121AD4187D16DDF44 /* NetworkClientTests.swift */,
@@ -547,7 +539,6 @@
 				C1492DCD29FD17CB00D040C6 /* Assets.xcassets */,
 				C166CA2D29FF048B008D9358 /* OceanPlusConfiguration.storekit */,
 				C1492E0729FD22FB00D040C6 /* CurrenciesInfo.plist */,
-				C1FBD03A2A0272D000E29CC6 /* CryptoInfo.plist */,
 				C144B04C2A030AD2005CEB87 /* GoogleService-Info.plist */,
 				C1E982A329FED2250042B952 /* Info.plist */,
 				FC1BBA16FC52C091AD74083B /* Support */,
@@ -695,7 +686,6 @@
 				C1FBD0362A026CB700E29CC6 /* CryptoNetworkManager.swift */,
 				C1FBD0422A027D8400E29CC6 /* CryptoWorker.swift */,
 				C1FBD0452A027ED600E29CC6 /* Models */,
-				DD656C061AF948278E1F50CE /* CoinMapping.swift */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -706,6 +696,7 @@
 				C1FBD0402A027D6500E29CC6 /* Crypto */,
 				C1FBD03F2A027D5400E29CC6 /* Fiat */,
 				07D75E48589176D24BD78981 /* NetworkClient.swift */,
+				AA01CE55F0A0001000000002 /* CurrencySnapshotStore.swift */,
 			);
 			path = Serivces;
 			sourceTree = "<group>";
@@ -723,7 +714,6 @@
 			isa = PBXGroup;
 			children = (
 				C1FBD0382A02719500E29CC6 /* DedustResponse.swift */,
-				C1FBD0462A027F1600E29CC6 /* CryptoInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1051,7 +1041,6 @@
 				C1492DCE29FD17CB00D040C6 /* Assets.xcassets in Resources */,
 				C10C046E2A00091500CC0C32 /* whale.json in Resources */,
 				C1FBD0582A02A37200E29CC6 /* bitcoin.json in Resources */,
-				C1FBD03B2A0272D000E29CC6 /* CryptoInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1082,7 +1071,6 @@
 			files = (
 				C1FBD0922A02A5A200E29CC6 /* Assets.xcassets in Resources */,
 				C144B0482A02FDC9005CEB87 /* CurrenciesInfo.plist in Resources */,
-				C144B0492A02FDC9005CEB87 /* CryptoInfo.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1172,15 +1160,14 @@
 				C1492E2C29FDA23C00D040C6 /* ImageSource.swift in Sources */,
 				C1FBD0392A02719500E29CC6 /* DedustResponse.swift in Sources */,
 				C1FBD0372A026CB700E29CC6 /* CryptoNetworkManager.swift in Sources */,
-				C1FBD0472A027F1600E29CC6 /* CryptoInfo.swift in Sources */,
 				C1FBD0432A027D8400E29CC6 /* CryptoWorker.swift in Sources */,
 				C1492E1329FD56D200D040C6 /* Plist.swift in Sources */,
 				C1492E3229FDB3FB00D040C6 /* UserDefault.swift in Sources */,
 				C1492E2E29FDA43500D040C6 /* CurrencyType.swift in Sources */,
 				C1492DFD29FD1C3F00D040C6 /* FiatNetworkManager.swift in Sources */,
 				C1492DE229FD1C1800D040C6 /* CurrencyCore.docc in Sources */,
-				CA5D016D3C7C9C73F51869CB /* CoinMapping.swift in Sources */,
 				C626A16D22B58316DEE00B47 /* NetworkClient.swift in Sources */,
+				AA01CE55F0A0001000000001 /* CurrencySnapshotStore.swift in Sources */,
 				D92CD0F64BD6677F16260B9E /* CodableUserDefault.swift in Sources */,
 				4E766732197B35146139A16C /* UserDefaultsMigrator.swift in Sources */,
 			);
@@ -1221,7 +1208,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				27630587985729CC068B3950 /* CodableModelTests.swift in Sources */,
-				8227D9EA448B022B77A330B0 /* CoinMappingTests.swift in Sources */,
 				80AE14E3642DCDBFE9C8B548 /* CurrencyMathTests.swift in Sources */,
 				C9CE3C32DA8B1F0065476715 /* CurrencyServiceTests.swift in Sources */,
 				4E471178933D2D3690061484 /* NetworkClientTests.swift in Sources */,

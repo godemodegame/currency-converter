@@ -44,12 +44,24 @@ final class MockNetworkClient: NetworkClient, @unchecked Sendable {
     var capturedURL: URL? { capturedURLs.last }
     var responseJSON: String = "{}"
     var error: Error?
+    /// 1-based call number that should throw (the rest succeed) — used to model a
+    /// single rate-limited page mid-pagination.
+    var failOnCall: Int?
 
     func get<T>(_ url: URL, as type: T.Type) async throws -> T where T: Decodable {
         capturedURLs.append(url)
         if let error { throw error }
+        if capturedURLs.count == failOnCall { throw CurrencyError.httpStatus(429) }
         return try JSONDecoder().decode(T.self, from: Data(responseJSON.utf8))
     }
+}
+
+/// In-memory `CurrencySnapshotStore` so service tests don't touch shared storage.
+final class MockSnapshotStore: CurrencySnapshotStore, @unchecked Sendable {
+    private(set) var stored: [Currency]
+    init(_ initial: [Currency] = []) { stored = initial }
+    func load() -> [Currency] { stored }
+    func save(_ currencies: [Currency]) { stored = currencies }
 }
 
 // MARK: - URLProtocol stub (for URLSessionNetworkClient)
@@ -121,11 +133,11 @@ final class MockFiatNetwork: FiatNetworkManager, @unchecked Sendable {
 final class MockCryptoNetwork: CryptoNetworkManager, @unchecked Sendable {
     private(set) var callCount = 0
     var error: Error?
-    var response: [String: CoinGeckoResponse]
+    var response: [CoinGeckoMarket]
 
-    init(response: [String: CoinGeckoResponse] = [:]) { self.response = response }
+    init(response: [CoinGeckoMarket] = []) { self.response = response }
 
-    func getExchangeRates() async throws -> [String: CoinGeckoResponse] {
+    func getExchangeRates() async throws -> [CoinGeckoMarket] {
         callCount += 1
         if let error { throw error }
         return response
@@ -141,5 +153,5 @@ final class MockFiatWorker: FiatCurrencyWorker {
 final class MockCryptoWorker: CryptoCurrencyWorker {
     var currencies: [Currency]
     init(currencies: [Currency]) { self.currencies = currencies }
-    func prepareCurrencies(_ dict: [String: CoinGeckoResponse]) throws -> [Currency] { currencies }
+    func prepareCurrencies(_ markets: [CoinGeckoMarket]) throws -> [Currency] { currencies }
 }
