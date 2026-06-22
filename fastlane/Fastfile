@@ -12,6 +12,9 @@ SIGNABLE = {
   "WidgetIntent"        => "gmg.CurrencyConverter.WidgetIntent",
 }.freeze
 
+# Embedded frameworks that get code-signed during archive but carry no profile.
+FRAMEWORK_TARGETS = %w[CurrencyCore Subscriptions].freeze
+
 # IDFA / advertising answers for the App Store review questionnaire.
 # This app integrates Google AdMob (GADApplicationIdentifier in Info.plist) and
 # asks for App Tracking Transparency, so it DOES use the advertising identifier.
@@ -81,6 +84,19 @@ platform :ios do
         team_id:               TEAM_ID,
         code_sign_identity:    "Apple Distribution",
         profile_name:          "match AppStore #{bundle_id}",
+      )
+    end
+
+    # The embedded frameworks are signed with the distribution cert too, but
+    # need NO provisioning profile. Without this they stay on automatic signing
+    # and the archive fails looking for an "iOS Development" cert on the runner.
+    FRAMEWORK_TARGETS.each do |target|
+      update_code_signing_settings(
+        path:                  PROJECT,
+        targets:               [target],
+        use_automatic_signing: false,
+        team_id:               TEAM_ID,
+        code_sign_identity:    "Apple Distribution",
       )
     end
 
