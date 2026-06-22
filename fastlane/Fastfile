@@ -100,12 +100,13 @@ platform :ios do
       )
     end
 
-    # On a tag push the workflow passes APP_VERSION (e.g. "1.2.0" from tag v1.2.0);
-    # set the marketing version to match so the right App Store version is submitted.
+    # Marketing version: from the git tag on a release (APP_VERSION, e.g. "1.2.0"
+    # from tag v1.2.0), otherwise the app target's current value. Propagate it to
+    # ALL targets so the embedded extensions match the parent app — App Store
+    # rejects an extension whose CFBundleShortVersionString differs from the app.
     app_version = ENV["APP_VERSION"].to_s
-    unless app_version.empty?
-      increment_version_number(xcodeproj: PROJECT, version_number: app_version)
-    end
+    app_version = (get_version_number(xcodeproj: PROJECT, target: "CurrencyConverter") rescue "") if app_version.empty?
+    increment_version_number(xcodeproj: PROJECT, version_number: app_version) unless app_version.to_s.empty?
 
     # Unique, monotonic build number — GitHub run number in CI, commit count locally.
     # apple-generic versioning + GENERATE_INFOPLIST_FILE flows this into CFBundleVersion.
