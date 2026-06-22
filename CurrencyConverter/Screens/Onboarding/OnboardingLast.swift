@@ -48,9 +48,14 @@ struct OnboardingLast: View {
                     .primaryButtonStyle()
             }
             .padding(.horizontal, 40)
+            .accessibilityIdentifier(AXID.Onboarding.support)
             Button {
                 Task {
-                    await ATTrackingManager.requestTrackingAuthorization()
+                    // The system ATT prompt would block the UI test runner,
+                    // so skip it in test mode and just finish onboarding.
+                    if !UITestConfig.isActive {
+                        await ATTrackingManager.requestTrackingAuthorization()
+                    }
                     isFirstOpen = false
                     close.toggle()
                 }
@@ -59,8 +64,14 @@ struct OnboardingLast: View {
                     .font(.title3)
                     .foregroundColor(.secondary)
                     .cornerRadius(10)
-            }.opacity(showButton ? 1 : 0)
+            }
+            .opacity(showButton ? 1 : 0)
+            .accessibilityIdentifier(AXID.Onboarding.maybeLater)
         }.task {
+            if UITestConfig.instantAnimations {
+                showButton = true
+                return
+            }
             do {
                 try await Task.sleep(nanoseconds: 3_000_000_000)
                 withAnimation {

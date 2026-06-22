@@ -47,9 +47,14 @@ final class CurrenciesListViewModel: ObservableObject {
         favoriteCodes = Set(favoriteCurrencies)
         // Filtering by segment/search is a pure local re-derivation off the
         // immutable source — no network refetch and no overlapping load tasks.
+        // We filter with the *emitted* values: `@Published` fires its publisher
+        // in `willSet`, so re-reading `self.selectedSegment` here would observe
+        // the previous value and render results that lag one change behind.
         Publishers.CombineLatest($selectedSegment, $searchText)
             .dropFirst()
-            .sink { [weak self] _ in self?.applyFilters() }
+            .sink { [weak self] segment, searchText in
+                self?.applyFilters(segment: segment, searchText: searchText)
+            }
             .store(in: &bin)
     }
 
@@ -92,7 +97,17 @@ final class CurrenciesListViewModel: ObservableObject {
 
     // MARK: Private methods
 
-    private func applyFilters() {
+    /// Re-derives the displayed list. `segment`/`searchText` default to the
+    /// committed published values (used by the direct `loadData` call); the
+    /// Combine subscription passes the freshly emitted values explicitly to
+    /// avoid `willSet` staleness.
+    private func applyFilters(
+        segment: CurrenciesListSegment? = nil,
+        searchText: String? = nil
+    ) {
+        let segment = segment ?? selectedSegment
+        let searchText = searchText ?? self.searchText
+
         var result = allCurrencies
         if !searchText.isEmpty {
             let query = searchText.lowercased()
@@ -101,7 +116,7 @@ final class CurrenciesListViewModel: ObservableObject {
                 || $0.code.lowercased().contains(query)
             }
         }
-        switch selectedSegment {
+        switch segment {
         case .favorite:
             result = result.filter { favoriteCodes.contains($0.code) }
         case .fiat:
@@ -112,7 +127,7 @@ final class CurrenciesListViewModel: ObservableObject {
             break
         }
         currencies = result.sorted {
-            favoriteCodes.contains($0.code) || $0.code < $1.code
+            (favoriteCodes.contains($0.code) ? 0 : 1, $0.code) < (favoriteCodes.contains($1.code) ? 0 : 1, $1.code)
         }
     }
 }

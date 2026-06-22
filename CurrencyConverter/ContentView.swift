@@ -28,6 +28,7 @@ struct ContentView: View {
                         } label: {
                             Text("Add")
                         }
+                        .accessibilityIdentifier(AXID.Nav.addButton)
                     }
 
                     ToolbarItem(placement: .navigationBarLeading) {
@@ -37,6 +38,7 @@ struct ContentView: View {
                             } label: {
                                 Text("Remove ads")
                             }
+                            .accessibilityIdentifier(AXID.Nav.removeAdsButton)
                         }
                     }
                 }.sheet(isPresented: $showOnboarding) {

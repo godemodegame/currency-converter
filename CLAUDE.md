@@ -19,7 +19,49 @@ List all targets and schemes:
 xcodebuild -list -project CurrencyConverter.xcodeproj
 ```
 
-**There are no test targets** in this project (no XCTest bundles). `xcodebuild test` will not run anything — don't suggest it as a verification step. Verify changes with a build.
+## Testing
+
+The project has two **Swift Testing** logic bundles (Xcode 16+; `import Testing`, `@Test`/`#expect`), run via the shared **`CurrencyConverterTests`** scheme, plus a separate **XCUITest** bundle (`import XCTest`) run via its own **`CurrencyConverterUITests`** scheme (see "UI Tests (XCUITest)" below):
+
+- **CurrencyCoreTests** — framework-hosted logic tests for `CurrencyCore` (conversion math, `CoinMapping`, `Plist.load`, the property wrappers, `UserDefaultsMigrator`, `NetworkClient`/managers via a mock client + URLProtocol stub, and `CurrencyService` via mock workers/managers).
+- **CurrencyConverterTests** — app-hosted (`TEST_HOST` = the app) tests for the workers (they read the bundled `*.plist` via `Bundle.main`, which only resolves inside the app), the `ConverterViewModel`/`CurrenciesListViewModel` derivation (black-box through the public API), the `PurchaseService` gate, and StoreKit-backed IAP tests (`PurchaseServiceStoreKitTests` + `Products.storekit`).
+- **CurrencyConverterUITests** — black-box **XCUITest** target (`com.apple.product-type.bundle.ui-testing`, `TEST_TARGET_NAME` = the app) driving the real app on the simulator: launch/onboarding, the converter, the currencies list (segments, search, favoriting), and the subscription paywall.
+
+> `PurchaseServiceStoreKitTests` runs against an in-process `SKTestSession` (`Products.storekit`). StoreKitTest is **broken on the iOS 26.3–26.5 simulator runtimes under headless `xcodebuild test`** — an Apple regression where the `.storekit`→`storekitd` config sync is IDE-only (`SKInternalErrorDomain Code=3` "Error saving configuration file" / `Code=12` "remote proxy … Sandbox"), so `Product.products(for:)` returns empty. The product-dependent tests therefore **self-skip** (early-return) when the StoreKit backend is unavailable, so the default `xcodebuild test` (which resolves to the newest, 26.5, runtime) stays green; `noEntitlementsMeansLocked` always runs. They genuinely run and pass on **iOS 26.0/26.1** (verified on 26.0 — full `loadProducts`/`purchase`→`hasUnlockedPro`/cross-instance-entitlement flow):
+> ```bash
+> # one-time: create an iOS 26.0 device (distinct name avoids clashing with the default 26.5 "iPhone 17")
+> xcrun simctl create iPhone17-260 'iPhone 17' com.apple.CoreSimulator.SimRuntime.iOS-26-0
+> xcodebuild test -scheme CurrencyConverterTests -project CurrencyConverter.xcodeproj \
+>   -only-testing:CurrencyConverterTests/PurchaseServiceStoreKitTests \
+>   -destination 'platform=iOS Simulator,name=iPhone17-260,OS=26.0'
+> ```
+> (the Xcode GUI test runner also works). The first `purchase()` is slow (~storekitd cold-start). The non-StoreKit `PurchaseServiceTests` (locked-by-default + `PurchaseError` cases) always run.
+
+Run the full (logic) suite:
+```bash
+xcodebuild test -scheme CurrencyConverterTests -project CurrencyConverter.xcodeproj \
+  -destination 'platform=iOS Simulator,name=iPhone 17'
+```
+
+Conventions worth keeping:
+- Tests touching shared `AppGroup.userDefaults` (the `favoriteCurrencies`/`savedCurrencies` keys aren't injectable in the ViewModels / `CurrencyService`) must be **`.serialized`**. The two ViewModel suites are nested under one `.serialized` parent so they don't race each other; `URLProtocolStub`-based tests are serialized for the same reason (shared static state).
+- ViewModel inputs (selected currency / amount / segment / search) can be set before or after `loadData()`: both the direct `recompute()`/`applyFilters()` inside `loadData` **and** the post-load Combine path now derive off committed/emitted values. (The Combine sinks pass the publisher's emitted values into `recompute(...)`/`applyFilters(...)` rather than re-reading the `@Published` properties, which would otherwise be stale-by-one because `@Published` fires in `willSet` — this was a real bug that showed the *previous* segment/search/base in the live UI; see the ViewModels section.)
+- The logic test targets are registered in the hand-managed pbxproj (see below) — adding a new test file means wiring it into the right test target, same as any source file.
+
+### UI Tests (XCUITest)
+
+`CurrencyConverterUITests/` is a black-box XCUITest bundle. Run it via its own scheme (kept separate so the fast logic suite above isn't slowed by ~3.5 min of UI runs):
+```bash
+xcodebuild test -scheme CurrencyConverterUITests -project CurrencyConverter.xcodeproj \
+  -destination 'platform=iOS Simulator,name=iPhone 17'
+```
+
+It is made **deterministic** by an opt-in test mode in the app target (entirely inert in production — gated on a launch argument):
+- **`CurrencyConverter/Support/UITestConfig.swift`** — when the app is launched with the `UITESTS` argument (`UITestLaunchArgument.activation`), `bootstrapIfNeeded()` (called first thing in `CurrencyConverterApp.init`) skips/forces onboarding, seeds a fixed favorites set into the app group, clears the persisted snapshot, hides the ad banner, and collapses onboarding animations to instant + skips the ATT prompt. Adding `UITESTS_ONBOARDING` shows the onboarding flow instead of skipping it.
+- **`UITestStubCurrencyService.swift`** — a network-free `CurrencyServiceProtocol` returning `UITestFixtures.currencies` (4 fiat: USD/EUR/GBP/JPY, 3 crypto: BTC/ETH/SOL). `CurrencyConverterApp` injects it instead of the real `CurrencyService` when `UITestConfig.isActive`.
+- **`AccessibilityIdentifiers.swift`** (`AXID` + `UITestLaunchArgument`) — stable identifiers, the **one source file compiled into both the app and the UI-test target** (it's Foundation-only; the UI-test bundle can't import the app module). Views set `.accessibilityIdentifier(AXID...)`; tests query the same constants.
+- The base class **`UITestCase`** launches via `launchApp(onboarding:)` and offers `assertExists` / `assertEventuallyGone` / `tapWhenReady` helpers. List rows expose `identifier: list.row.<CODE>` and an `accessibilityValue` of `saved`/`unsaved`.
+- Like the logic targets, `CurrencyConverterUITests` is hand-wired into the pbxproj — a **new UI test file must be added to the `CurrencyConverterUITests` target's sources** (the four pbxproj entries, or via Xcode). The target was created with the `xcodeproj` Ruby gem; the shared scheme lives at `xcshareddata/xcschemes/CurrencyConverterUITests.xcscheme`.
 
 ## Adding New Source Files (Important)
 
@@ -99,8 +141,12 @@ Two property wrappers (in `CurrencyCore/PropertyWrappers/`) both default to the 
 
 **ViewModels:**
 
-- `ConverterViewModel` (`Screens/Converter`): Main conversion screen. Holds an immutable favorites snapshot and derives the displayed list via a local `recompute()` (rate conversion + amount) — changing the base currency or amount does **not** refetch; only the on-appear `loadData()` hits the service
-- `CurrenciesListViewModel` (`Screens/List`): Currency list management, integrates with `PurchaseService` for pro features. Holds an immutable source list and derives the displayed list via `applyFilters()` (search + segment) without mutating the source; favorites are tracked in the published `favoriteCodes` set
+- `ConverterViewModel` (`Screens/Converter`): Main conversion screen. Holds an immutable favorites snapshot and derives the displayed list via a local `recompute(...)` (rate conversion + amount) — changing the base currency or amount does **not** refetch; only the on-appear `loadData()` hits the service
+- `CurrenciesListViewModel` (`Screens/List`): Currency list management, integrates with `PurchaseService` for pro features. Holds an immutable source list and derives the displayed list via `applyFilters(...)` (search + segment) without mutating the source; favorites are tracked in the published `favoriteCodes` set
+
+> Both VMs subscribe to their `@Published` inputs via `CombineLatest(...).sink`. The sink passes the **emitted** values into `recompute(...)`/`applyFilters(...)`; it must **not** re-read `self.<published>` inside the closure — `@Published` fires its publisher in `willSet`, so a re-read sees the *previous* value and the UI renders one change behind (wrong segment/search/base). The `loadData` path calls these methods with no arguments, so they fall back to the committed published values.
+
+> Both VMs (and `PurchaseService`) are owned by `CurrencyConverterApp` as **`@StateObject`** (constructed once in `App.init`, injected via `.environmentObject`). Do **not** construct them inline in `body` (e.g. `.environmentObject(ConverterViewModel(...))`): `body` re-evaluates whenever an observed object changes (notably when `purchaseService`'s `.task` finishes), which would rebuild a fresh, empty VM and blank out the already-loaded converter/list while `.task`'s `loadData` no longer re-runs.
 
 **In-App Purchases:**
 

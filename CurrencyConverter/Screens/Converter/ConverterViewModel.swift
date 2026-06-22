@@ -37,9 +37,13 @@ final class ConverterViewModel: ObservableObject {
         self.currencyService = currencyService
         // Changing the base currency or the amount is a pure local recompute —
         // no network refetch, so typing no longer hits the service per keystroke.
+        // We recompute with the *emitted* values: `@Published` fires in
+        // `willSet`, so re-reading `self` here would lag one change behind.
         Publishers.CombineLatest($selectedCurrency, $enteredValue)
             .dropFirst()
-            .sink { [weak self] _ in self?.recompute() }
+            .sink { [weak self] currency, value in
+                self?.recompute(selectedCurrency: currency, enteredValue: value)
+            }
             .store(in: &bin)
     }
 
@@ -69,9 +73,16 @@ final class ConverterViewModel: ObservableObject {
         recompute()
     }
 
-    private func recompute() {
-        let amount = Double(enteredValue) ?? 1
-        let sorted = favorites.sorted { $0.code == selectedCurrency || $0.code < $1.code }
+    /// Re-derives the displayed list. `selectedCurrency`/`enteredValue` default
+    /// to the committed published values (used by the direct `apply` call); the
+    /// Combine subscription passes the freshly emitted values explicitly to
+    /// avoid `willSet` staleness.
+    private func recompute(selectedCurrency: String? = nil, enteredValue: String? = nil) {
+        let selectedCurrency = selectedCurrency ?? self.selectedCurrency
+        let amount = Double(enteredValue ?? self.enteredValue) ?? 1
+        let sorted = favorites.sorted {
+            ($0.code == selectedCurrency ? 0 : 1, $0.code) < ($1.code == selectedCurrency ? 0 : 1, $1.code)
+        }
         if let base = sorted.first(where: { $0.code == selectedCurrency }) {
             currencies = sorted.converted(against: base, amount: amount)
         } else {

@@ -39,7 +39,14 @@ struct OnboardingFirst: View {
             .padding(.horizontal, 40)
             .padding(.bottom)
             .opacity(showButton ? 1 : 0)
+            .accessibilityIdentifier(AXID.Onboarding.firstContinue)
         }.task {
+            if UITestConfig.instantAnimations {
+                showIcon = true
+                showTexts = true
+                showButton = true
+                return
+            }
             do {
                 try await Task.sleep(nanoseconds: 500_000_000)
                 withAnimation {

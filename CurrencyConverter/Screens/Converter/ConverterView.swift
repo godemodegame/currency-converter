@@ -30,6 +30,7 @@ struct ConverterView: View {
                     Text("Enter the value in the field below")
                         .font(.system(size: 14))
                         .foregroundColor(.gray)
+                        .accessibilityIdentifier(AXID.Converter.emptyPrompt)
                     Spacer()
                 }.clearRow()
                 HStack {
@@ -43,8 +44,9 @@ struct ConverterView: View {
             }
             .listStyle(.insetGrouped)
             .hideScrollIndicators()
+            .accessibilityIdentifier(AXID.Converter.list)
 
-            if !purchaseService.hasUnlockedPro {
+            if !purchaseService.hasUnlockedPro, !UITestConfig.hideAds {
                 BannerView(viewWidth: UIScreen.main.bounds.width)
                     .frame(height: GADAdSizeBanner.size.height + 10)
             }

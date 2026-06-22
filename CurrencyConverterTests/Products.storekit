@@ -1,0 +1,54 @@
+{
+  "identifier" : "F2805E2B",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6448683062",
+    "_developerTeamID" : "N9SGQL8822",
+    "_lastSynchronizedDate" : 704578708.49436998
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21335805",
+      "localizations" : [
+
+      ],
+      "name" : "Ocean+",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6448684279",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Removes all advertisment",
+              "displayName" : "Annual Ocean+",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "annual.ocean.plus",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Annual Ocean+",
+          "subscriptionGroupID" : "21335805",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

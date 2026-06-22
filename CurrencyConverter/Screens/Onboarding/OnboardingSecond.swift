@@ -33,6 +33,7 @@ struct OnboardingSecond: View {
             }
             .padding(.horizontal, 40)
             .padding(.bottom)
+            .accessibilityIdentifier(AXID.Onboarding.secondContinue)
         }.navigationBarBackButtonHidden(true)
     }
 }

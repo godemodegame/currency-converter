@@ -21,6 +21,7 @@ struct SubscriptionView: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.bottom, 20)
+                .accessibilityIdentifier(AXID.Subscription.title)
             Text("You can use this app for free, but you will have a limited number of items in your favorites. To remove the limitation, subscribe")
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
@@ -46,14 +47,18 @@ struct SubscriptionView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.blue)
                     .cornerRadius(10)
-            }.padding(.horizontal, 40)
+            }
+            .padding(.horizontal, 40)
+            .accessibilityIdentifier(AXID.Subscription.subscribeButton)
             Button {
                 dismiss()
             } label: {
                 Text("Cancel")
                     .font(.title3)
                     .fontWeight(.bold)
-            }.padding(.bottom)
+            }
+            .padding(.bottom)
+            .accessibilityIdentifier(AXID.Subscription.cancelButton)
         }
         .padding(.horizontal, 20)
     }
