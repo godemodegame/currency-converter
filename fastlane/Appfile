@@ -1,0 +1,5 @@
+app_identifier("gmg.CurrencyConverter")
+team_id("N9SGQL8822") # Apple Developer Portal team
+
+# No apple_id / itc_team_id needed: the App Store Connect API key
+# (ASC_KEY_ID / ASC_ISSUER_ID / ASC_KEY_CONTENT) authenticates every action.
