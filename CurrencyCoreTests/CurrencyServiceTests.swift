@@ -117,6 +117,35 @@ import Testing
         #expect(saved.map(\.code) == ["BTC", "EUR", "USD"])
     }
 
+    @Test func savedOrFetchUsesPersistedSnapshotWithoutNetwork() async throws {
+        let store = MockSnapshotStore([makeCurrency("JPY"), makeCurrency("GBP")])
+        let (service, fiatNet, cryptoNet, _) = makeService(
+            fiat: [makeCurrency("USD")],
+            crypto: [makeCurrency("BTC", type: .crypto)],
+            store: store
+        )
+
+        let result = try await service.getSavedCurrenciesOrFetch()
+
+        #expect(Set(result.map(\.code)) == ["JPY", "GBP"])
+        #expect(fiatNet.callCount == 0)
+        #expect(cryptoNet.callCount == 0)
+    }
+
+    @Test func savedOrFetchFetchesAndPersistsWhenSnapshotIsEmpty() async throws {
+        let (service, fiatNet, cryptoNet, store) = makeService(
+            fiat: [makeCurrency("USD"), makeCurrency("EUR")],
+            crypto: [makeCurrency("BTC", type: .crypto)]
+        )
+
+        let result = try await service.getSavedCurrenciesOrFetch()
+
+        #expect(result.map(\.code) == ["BTC", "EUR", "USD"])
+        #expect(fiatNet.callCount == 1)
+        #expect(cryptoNet.callCount == 1)
+        #expect(store.stored.map(\.code) == ["BTC", "EUR", "USD"])
+    }
+
     @Test func getSavedCurrenciesReturnsPersistedValue() async throws {
         let store = MockSnapshotStore([makeCurrency("JPY"), makeCurrency("GBP")])
         let (service, _, _, _) = makeService(fiat: [], crypto: [], store: store)

@@ -23,51 +23,52 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        await provideOptions(searchTerm: searchTerm)
+        try await provideOptions(searchTerm: searchTerm)
     }
     
     func provideCurrency2OptionsCollection(
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        await provideOptions(searchTerm: searchTerm)
+        try await provideOptions(searchTerm: searchTerm)
     }
     
     func provideCurrency3OptionsCollection(
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        await provideOptions(searchTerm: searchTerm)
+        try await provideOptions(searchTerm: searchTerm)
     }
     
     func provideBaseCurrencyOptionsCollection(
         for intent: ConfigurationIntent,
         searchTerm: String?
     ) async throws -> INObjectCollection<CurrencyName> {
-        await provideOptions(searchTerm: searchTerm)
+        try await provideOptions(searchTerm: searchTerm)
     }
 
     // MARK: Private methods
 
     private func provideOptions(
         searchTerm: String?
-    ) async -> INObjectCollection<CurrencyName> {
+    ) async throws -> INObjectCollection<CurrencyName> {
         if let searchTerm {
-            return await search(searchTerm)
+            return try await search(searchTerm)
         } else {
-            return await fetchCurrencies()
+            return try await fetchCurrencies()
         }
     }
 
-    private func search(_ searchTerm: String) async -> INObjectCollection<CurrencyName> {
-        INObjectCollection(
+    private func search(_ searchTerm: String) async throws -> INObjectCollection<CurrencyName> {
+        let normalizedSearchTerm = searchTerm.lowercased()
+        return INObjectCollection(
             sections: [
                 INObjectSection(
                     title: "",
-                    items: await currencyService.getSavedCurrencies()
+                    items: try await currencyService.getSavedCurrenciesOrFetch()
                         .filter {
-                            $0.name.lowercased().contains(searchTerm.lowercased())
-                            || $0.code.lowercased().contains(searchTerm.lowercased())
+                            $0.name.lowercased().contains(normalizedSearchTerm)
+                            || $0.code.lowercased().contains(normalizedSearchTerm)
                         }
                         .map { currency in
                             CurrencyName(
@@ -82,8 +83,8 @@ final class IntentHandler: INExtension, ConfigurationIntentHandling {
         )
     }
 
-    private func fetchCurrencies() async -> INObjectCollection<CurrencyName> {
-        let currencies = await currencyService.getSavedCurrencies()
+    private func fetchCurrencies() async throws -> INObjectCollection<CurrencyName> {
+        let currencies = try await currencyService.getSavedCurrenciesOrFetch()
         return INObjectCollection(
             sections: [
                 INObjectSection(

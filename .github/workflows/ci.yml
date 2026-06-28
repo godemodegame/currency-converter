@@ -56,3 +56,100 @@ jobs:
             -destination "id=${{ steps.sim.outputs.udid }}" \
             -skipMacroValidation \
             CODE_SIGNING_ALLOWED=NO
+
+  storekit-purchase-tests:
+    name: StoreKit purchase flow (iOS 26.0/26.1)
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select latest stable Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes available
+
+      - name: Pick iOS 26.0/26.1 simulator
+        id: sim
+        run: |
+          set -euo pipefail
+
+          runtime=$(
+            xcrun simctl list runtimes available --json \
+              | jq -r '
+                  [.runtimes[]
+                    | select(.platform == "iOS" and .isAvailable == true)
+                    | select(.version == "26.1" or .version == "26.0")]
+                  | sort_by(.version | split(".") | map(tonumber))
+                  | reverse
+                  | first
+                  | if . == null then
+                      empty
+                    else
+                      . as $runtime
+                      | ($runtime.supportedDeviceTypes
+                          | (map(select(.productFamily == "iPhone" and .name == "iPhone 17"))[0]
+                            // map(select(.productFamily == "iPhone"))[0])) as $device
+                      | [$runtime.identifier, $runtime.version, $device.identifier, $device.name]
+                      | @tsv
+                    end
+                '
+          )
+
+          if [ -z "$runtime" ]; then
+            echo "::error::No available iOS 26.0 or 26.1 runtime found; PurchaseServiceStoreKitTests require one to exercise StoreKitTest instead of self-skipping."
+            xcrun simctl list runtimes available
+            exit 1
+          fi
+
+          IFS=$'\t' read -r runtime_id runtime_version device_type device_name <<< "$runtime"
+
+          device=$(
+            xcrun simctl list devices available --json \
+              | jq -r --arg runtime_id "$runtime_id" '
+                  [.devices[$runtime_id][]?
+                    | select(.isAvailable == true)
+                    | select(.name | startswith("iPhone"))]
+                  | sort_by(if .name == "iPhone 17" then 0 else 1 end, .name)
+                  | first
+                  | if . == null then empty else [.udid, .name] | @tsv end
+                '
+          )
+
+          if [ -n "$device" ]; then
+            IFS=$'\t' read -r udid device_name <<< "$device"
+          else
+            sim_name="StoreKit iOS ${runtime_version} (${GITHUB_RUN_ID:-local})"
+            udid=$(xcrun simctl create "$sim_name" "$device_type" "$runtime_id")
+          fi
+
+          echo "Using $device_name on iOS $runtime_version ($udid)"
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+
+      - name: Boot simulator
+        run: |
+          state=$(
+            xcrun simctl list devices available --json \
+              | jq -r --arg udid "${{ steps.sim.outputs.udid }}" \
+                  '[.devices[][] | select(.udid == $udid)][0].state // empty'
+          )
+          if [ "$state" != "Booted" ]; then
+            xcrun simctl boot "${{ steps.sim.outputs.udid }}"
+          fi
+          xcrun simctl bootstatus "${{ steps.sim.outputs.udid }}" -b
+
+      - name: Run StoreKit purchase tests
+        run: |
+          xcodebuild test \
+            -scheme CurrencyConverterTests \
+            -project CurrencyConverter.xcodeproj \
+            -only-testing:CurrencyConverterTests/PurchaseServiceStoreKitTests \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -skipMacroValidation \
+            CODE_SIGNING_ALLOWED=NO

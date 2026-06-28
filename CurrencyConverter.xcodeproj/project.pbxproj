@@ -75,7 +75,6 @@
 		C1492E2E29FDA43500D040C6 /* CurrencyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1492E2D29FDA43500D040C6 /* CurrencyType.swift */; };
 		C1492E3229FDB3FB00D040C6 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1492E2F29FDAE0600D040C6 /* UserDefault.swift */; };
 		C1492E3729FE588300D040C6 /* HideScrollIndicatorsModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1492E3629FE588300D040C6 /* HideScrollIndicatorsModifier.swift */; };
-		C1586DE42A4309DD00EF5F6F /* intro.json in Resources */ = {isa = PBXBuildFile; fileRef = C1586DE32A4309DD00EF5F6F /* intro.json */; };
 		C166CA2829FEE341008D9358 /* OnboardingFirst.swift in Sources */ = {isa = PBXBuildFile; fileRef = C166CA2729FEE341008D9358 /* OnboardingFirst.swift */; };
 		C166CA2A29FEE3E5008D9358 /* OnboardingSecond.swift in Sources */ = {isa = PBXBuildFile; fileRef = C166CA2929FEE3E5008D9358 /* OnboardingSecond.swift */; };
 		C166CA2C29FEE5D0008D9358 /* OnboardingLast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C166CA2B29FEE5D0008D9358 /* OnboardingLast.swift */; };
@@ -284,7 +283,6 @@
 		C1492E2F29FDAE0600D040C6 /* UserDefault.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		C1492E3529FE57AA00D040C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		C1492E3629FE588300D040C6 /* HideScrollIndicatorsModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideScrollIndicatorsModifier.swift; sourceTree = "<group>"; };
-		C1586DE32A4309DD00EF5F6F /* intro.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = intro.json; sourceTree = "<group>"; };
 		C166CA2729FEE341008D9358 /* OnboardingFirst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFirst.swift; sourceTree = "<group>"; };
 		C166CA2929FEE3E5008D9358 /* OnboardingSecond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSecond.swift; sourceTree = "<group>"; };
 		C166CA2B29FEE5D0008D9358 /* OnboardingLast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingLast.swift; sourceTree = "<group>"; };
@@ -464,7 +462,6 @@
 			children = (
 				C1FBD0572A02A37200E29CC6 /* bitcoin.json */,
 				C10C04682A0008A300CC0C32 /* dolphin.json */,
-				C1586DE32A4309DD00EF5F6F /* intro.json */,
 				C10C046D2A00091400CC0C32 /* whale.json */,
 				C10C046B2A0008B800CC0C32 /* fish.json */,
 			);
@@ -1036,7 +1033,6 @@
 				C1492E1C29FD65F600D040C6 /* CurrenciesInfo.plist in Resources */,
 				C144B04D2A030AD3005CEB87 /* GoogleService-Info.plist in Resources */,
 				C10C046C2A0008B800CC0C32 /* fish.json in Resources */,
-				C1586DE42A4309DD00EF5F6F /* intro.json in Resources */,
 				C10C04692A0008A300CC0C32 /* dolphin.json in Resources */,
 				C1492DCE29FD17CB00D040C6 /* Assets.xcassets in Resources */,
 				C10C046E2A00091500CC0C32 /* whale.json in Resources */,

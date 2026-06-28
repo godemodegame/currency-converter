@@ -17,6 +17,13 @@ struct OnboardingLast: View {
 
     @State var showButton = false
 
+    private var subscriptionPriceText: String {
+        guard let price = purchaseService.products.first?.displayPrice, !price.isEmpty else {
+            return "Loading price..."
+        }
+        return "1 year - \(price)"
+    }
+
     var body: some View {
         VStack {
             Spacer()
@@ -31,7 +38,7 @@ struct OnboardingLast: View {
             Text("If you want to support me and remove this restriction, you can subscribe")
                 .multilineTextAlignment(.center)
                 .padding([.bottom, .horizontal])
-            Text("1 year - \(purchaseService.products.first?.displayPrice ?? "")")
+            Text(subscriptionPriceText)
             Spacer()
             LegalLinksRow { close = true }
             Button {
@@ -67,7 +74,11 @@ struct OnboardingLast: View {
             }
             .opacity(showButton ? 1 : 0)
             .accessibilityIdentifier(AXID.Onboarding.maybeLater)
-        }.task {
+        }
+        .task {
+            await purchaseService.loadProducts()
+        }
+        .task {
             if UITestConfig.instantAnimations {
                 showButton = true
                 return

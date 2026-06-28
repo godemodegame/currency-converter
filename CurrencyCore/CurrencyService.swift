@@ -15,6 +15,17 @@ public protocol CurrencyServiceProtocol: AnyObject, ObservableObject {
     func getSavedCurrencies() async -> [Currency]
 }
 
+public extension CurrencyServiceProtocol {
+    /// Returns the persisted snapshot when available, otherwise performs one
+    /// live fetch. `getCurrencies()` persists successful fetches, so later
+    /// lookups can stay on the fast snapshot path.
+    func getSavedCurrenciesOrFetch() async throws -> [Currency] {
+        let saved = await getSavedCurrencies()
+        guard saved.isEmpty else { return saved }
+        return try await getCurrencies()
+    }
+}
+
 public actor CurrencyService: CurrencyServiceProtocol {
     // MARK: Private properties
 

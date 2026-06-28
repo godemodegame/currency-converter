@@ -11,11 +11,18 @@ import Subscriptions
 struct SubscriptionView: View {
     @EnvironmentObject var purchaseService: PurchaseService
     @Environment(\.dismiss) var dismiss
+
+    private var subscriptionPriceText: String {
+        guard let price = purchaseService.products.first?.displayPrice, !price.isEmpty else {
+            return "Loading price..."
+        }
+        return "1 year - \(price)"
+    }
     
     var body: some View {
         VStack {
             Spacer()
-            LottieView(lottieFile: "intro", animationSpeed: 1)
+            SubscriptionHeroView()
                 .frame(width: 200, height: 200)
             Text("Subscription")
                 .font(.title)
@@ -26,7 +33,7 @@ struct SubscriptionView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
                 .padding(.bottom, 20)
-            Text("1 Year = \(purchaseService.products.first?.displayPrice ?? "")")
+            Text(subscriptionPriceText)
             Spacer()
             LegalLinksRow { dismiss() }
             Button {
@@ -61,6 +68,69 @@ struct SubscriptionView: View {
             .accessibilityIdentifier(AXID.Subscription.cancelButton)
         }
         .padding(.horizontal, 20)
+        .task {
+            await purchaseService.loadProducts()
+        }
     }
 }
 
+private struct SubscriptionHeroView: View {
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color.blue.opacity(0.16),
+                            Color.green.opacity(0.14),
+                            Color.orange.opacity(0.12)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 168, height: 168)
+
+            Circle()
+                .stroke(Color.blue.opacity(0.18), lineWidth: 1)
+                .frame(width: 168, height: 168)
+
+            CurrencyBadge(systemName: "dollarsign", color: .green)
+                .offset(x: -48, y: -44)
+
+            CurrencyBadge(systemName: "eurosign", color: .blue)
+                .offset(x: 48, y: -36)
+
+            CurrencyBadge(systemName: "yensign", color: .orange)
+                .offset(x: -40, y: 48)
+
+            Circle()
+                .fill(Color(.systemBackground))
+                .frame(width: 86, height: 86)
+                .shadow(color: Color.black.opacity(0.10), radius: 18, x: 0, y: 10)
+                .overlay(
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundColor(.blue)
+                )
+        }
+        .accessibilityHidden(true)
+    }
+}
+
+private struct CurrencyBadge: View {
+    let systemName: String
+    let color: Color
+
+    var body: some View {
+        Circle()
+            .fill(Color(.systemBackground))
+            .frame(width: 54, height: 54)
+            .shadow(color: color.opacity(0.22), radius: 12, x: 0, y: 7)
+            .overlay(
+                Image(systemName: systemName)
+                    .font(.system(size: 22, weight: .bold))
+                    .foregroundColor(color)
+            )
+    }
+}

@@ -57,8 +57,9 @@ public final class PurchaseService: ObservableObject {
             return
         }
         do {
-            products = try await Product.products(for: productsId)
-            productsLoaded = true
+            let loadedProducts = try await Product.products(for: productsId)
+            products = loadedProducts
+            productsLoaded = productsId.isEmpty || !loadedProducts.isEmpty
         } catch {
             self.error = error
         }
